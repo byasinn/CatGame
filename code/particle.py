@@ -17,3 +17,88 @@ class Particle:
     def draw(self, surface):
         if self.radius > 0:
             pygame.draw.circle(surface, self.color, (int(self.pos[0]), int(self.pos[1])), int(self.radius))
+
+# ✨ Partículas flutuantes mágicas
+class AmbientFloatParticle:
+    def __init__(self, window_size):
+        self.x = random.randint(0, window_size[0])
+        self.y = random.randint(0, window_size[1])
+        self.radius = random.randint(1, 2)
+        self.alpha = random.randint(50, 150)
+        self.vel_y = random.uniform(-0.1, -0.4)
+        self.lifetime = random.randint(300, 800)
+
+    def update(self):
+        self.y += self.vel_y
+        self.alpha = max(0, self.alpha - 0.05)
+        self.lifetime -= 1
+
+    def draw(self, surface):
+        if self.alpha > 0:
+            glow = pygame.Surface((self.radius*4, self.radius*4), pygame.SRCALPHA)
+            pygame.draw.circle(glow, (255, 255, 200, int(self.alpha)), (self.radius*2, self.radius*2), self.radius)
+            surface.blit(glow, (self.x, self.y))
+
+# 🌫 Névoa mágica
+import pygame
+import random
+import math
+
+class MagicFogParticle:
+    def __init__(self, window_size):
+        self.x = random.randint(0, window_size[0])
+        self.y = random.randint(0, window_size[1])
+        self.base_radius = random.randint(60, 120)
+        self.alpha = random.randint(20, 35)
+        self.vel_x = random.uniform(-0.3, 0.3)
+        self.vel_y = random.uniform(-0.1, 0.1)
+        self.color = random.choice([
+            (200, 170, 255),
+            (180, 220, 255),
+            (255, 220, 255),
+        ])
+        self.time_offset = random.uniform(0, 1000)
+
+    def update(self):
+        self.x += self.vel_x
+        self.y += self.vel_y
+
+        # Rebote
+        win = pygame.display.get_surface().get_size()
+        if self.x < -self.base_radius: self.x = win[0]
+        if self.x > win[0]: self.x = -self.base_radius
+        if self.y < -self.base_radius: self.y = win[1]
+        if self.y > win[1]: self.y = -self.base_radius
+
+    def draw(self, surface):
+        t = pygame.time.get_ticks() / 1000 + self.time_offset
+        pulsar = math.sin(t * 1.5) * 0.1 + 1  # ~90% a 110%
+        radius = int(self.base_radius * pulsar)
+
+        fog = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(fog, (*self.color, self.alpha), (radius, radius), radius)
+        surface.blit(fog, (self.x, self.y))
+
+
+
+class ImpactParticle:
+    def __init__(self, position, color=(180, 0, 0)):
+        self.pos = list(position)
+        self.vel = [random.uniform(-2, 2), random.uniform(-2, 2)]
+        self.radius = random.randint(2, 4)
+        self.color = color
+        self.alpha = 255
+        self.lifetime = 20
+
+    def update(self):
+        self.pos[0] += self.vel[0]
+        self.pos[1] += self.vel[1]
+        self.radius = max(0, self.radius - 0.1)
+        self.alpha -= 10
+        self.lifetime -= 1
+
+    def draw(self, surface):
+        if self.radius > 0 and self.alpha > 0:
+            glow = pygame.Surface((self.radius*4, self.radius*4), pygame.SRCALPHA)
+            pygame.draw.circle(glow, (*self.color, int(self.alpha)), (self.radius*2, self.radius*2), int(self.radius))
+            surface.blit(glow, (self.pos[0] - self.radius*2, self.pos[1] - self.radius*2))

@@ -9,8 +9,9 @@ from code.entity import Entity
 
 class Enemy(Entity):
 
-    def __init__(self, name: str, position: tuple):
+    def __init__(self, name: str, position: tuple, window):
         super().__init__(name, position)
+        self.window = window
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         if self.name == "Enemy2":
             self.zigzag_timer = 0

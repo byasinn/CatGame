@@ -1,12 +1,11 @@
+import random
 import pygame
-
-from code.const import WIN_WIDTH
 from code.enemy import Enemy
 from code.enemyshot import EnemyShot
 from code.entity import Entity
 from code.player import Player
 from code.playershot import PlayerShot
-
+from code.particle import ImpactParticle
 class EntityMediator:
 
     @staticmethod
@@ -18,14 +17,14 @@ class EntityMediator:
             if ent.rect.right < 0:
                 ent.health = 0
         if isinstance(ent, PlayerShot):
-            if ent.rect.left >= WIN_WIDTH:
+            if ent.rect.left >= pygame.display.get_surface().get_width():
                 ent.health = 0
         if isinstance(ent, EnemyShot):
             if ent.rect.right < 0:
                 ent.health = 0
 
     @staticmethod
-    def verify_collision_entity(ent1, ent2):
+    def verify_collision_entity(ent1, ent2, entity_manager):
         valid_interaction = False
 
         if ent1.name == "Boss" and isinstance(ent2, PlayerShot):
@@ -51,12 +50,19 @@ class EntityMediator:
                     ent1.rect.left <= ent2.rect.right and
                     ent1.rect.bottom >= ent2.rect.top and
                     ent1.rect.top <= ent2.rect.bottom):
+
                 ent1.health -= ent2.damage
                 ent2.health -= ent1.damage
                 ent1.last_dmg = ent2.name
                 ent2.last_dmg = ent1.name
 
-                # Feedback visual ao levar dano
+                # Sangue ao atingir inimigos
+                if isinstance(ent1, Enemy) and isinstance(ent2, PlayerShot):
+                    EntityMediator._spawn_blood(entity_manager, ent1.rect.center, count=2)
+                elif isinstance(ent2, Enemy) and isinstance(ent1, PlayerShot):
+                    EntityMediator._spawn_blood(entity_manager, ent2.rect.center, count=2)
+
+                # Flash de dano nos jogadores
                 if isinstance(ent1, Player):
                     ent1.take_damage_flash()
                 if isinstance(ent2, Player):
@@ -74,22 +80,25 @@ class EntityMediator:
                     ent.score += enemy.score
 
     @staticmethod
-    def verify_collision(entity_list: list[Entity]):
+    def verify_collision(entity_manager, entity_list: list[Entity]):
         for i in range(len(entity_list)):
             entity1 = entity_list[i]
             EntityMediator.__verify_collision_window(entity1)
             for j in range(len(entity_list)):
                 entity2 = entity_list[j]
-                EntityMediator.verify_collision_entity(entity1, entity2)
+                EntityMediator.verify_collision_entity(entity1, entity2, entity_manager)
 
     @staticmethod
-    def verify_health(entity_list: list[Entity]):
-        for ent in entity_list[:]:  # itera sobre cópia para remoção segura
+    def verify_health(entity_manager, entity_list: list[Entity]):
+        for ent in entity_list[:]:
             if ent.health <= 0:
                 if isinstance(ent, Enemy):
                     EntityMediator.__give_score(ent, entity_list)
 
-                    # Toca som de morte sem cortar música
+                    # Sangue ao morrer
+                    EntityMediator._spawn_blood(entity_manager, ent.rect.center, count=5)
+
+                    # 🔊 Som de morte
                     try:
                         sound = pygame.mixer.Sound(f"./asset/{ent.name}Death.mp3")
                         sound.set_volume(0.6)
@@ -99,7 +108,6 @@ class EntityMediator:
 
                 elif ent.name == "Boss":
                     EntityMediator.__give_score(ent, entity_list)
-
                     try:
                         sound = pygame.mixer.Sound("./asset/BossDeath.mp3")
                         sound.set_volume(0.7)
@@ -109,3 +117,13 @@ class EntityMediator:
 
                 entity_list.remove(ent)
 
+    @staticmethod
+    def _spawn_blood(entity_manager, position, count=3):
+        from code.particle import ImpactParticle
+        for _ in range(count):
+            entity_manager.particles_impact.append(
+                ImpactParticle(
+                    position=position,
+                    color=random.choice([(180, 0, 0), (255, 50, 50)])
+                )
+            )

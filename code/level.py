@@ -47,15 +47,26 @@ class Level:
 
         if self.name == "Level1":
             self.sunlight = pygame.image.load("./asset/LightOverlay_Level1.png").convert_alpha()
+
         elif self.name == "Level2":
             self.sunlight = pygame.image.load("./asset/LightOverlay_Level2.png").convert_alpha()
+
         elif self.name == "Level3":
             self.sunlight = pygame.image.load("./asset/LightOverlay_Level2.png").convert_alpha()
+
 
     def run(self, player_score: list[int]):
         pygame.mixer_music.load(f'./asset/{self.name}.mp3')
         pygame.mixer_music.play(-1)
         clock = pygame.time.Clock()
+        self.entity_manager.enable_ambient_particles = True
+        self.entity_manager.enable_magic_fog = True
+
+        for ent in self.entity_list:
+            if ent.name.startswith("LightOverlay"):
+                raw = pygame.image.load(f"./asset/{ent.name}.png").convert_alpha()
+                w, h = self.window.get_size()
+                ent.surf = pygame.transform.scale(raw, (w, h))
 
         while True:
             clock.tick(60)
@@ -79,12 +90,8 @@ class Level:
             self.entity_manager.draw_entities()
             self.entity_manager.draw_particles()
             self.entity_manager.update_entities()
+            self.entity_manager.update_visual_effects()
             self.entity_manager.handle_collisions()
-
-            # Luz mágica
-            sunlight_copy = self.sunlight.copy()
-            sunlight_copy.set_alpha(80 + int(20 * math.sin(pygame.time.get_ticks() * 0.002)))
-            self.window.blit(sunlight_copy, (0, 0))
 
             # Verifica fim de jogo
             if not self.entity_manager.is_player_alive():

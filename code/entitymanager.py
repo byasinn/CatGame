@@ -1,6 +1,7 @@
 import math
 import pygame
 from code.entity import Entity
+from code.particle import AmbientFloatParticle, MagicFogParticle
 from code.player import Player
 from code.enemy import Enemy
 from code.background import Background
@@ -11,6 +12,13 @@ class EntityManager:
         self.entity_list = entity_list
         self.window = window
 
+        # Efeitos visuais mágicos
+        self.enable_ambient_particles = False
+        self.enable_magic_fog = False
+        self.particles_ambient = []
+        self.particles_fog = []
+        self.particles_impact = []
+
     def update_entities(self):
         for ent in self.entity_list:
             ent.move()
@@ -20,9 +28,18 @@ class EntityManager:
                     self.entity_list.append(shot)
 
     def draw_backgrounds(self):
+        # 1. Desenha todos os backgrounds normais
         for ent in self.entity_list:
             if isinstance(ent, Background):
                 self.window.blit(ent.surf, ent.rect)
+
+        # 2. Aplica a camada de luz por cima, com transparência animada
+        for ent in self.entity_list:
+            if ent.name.startswith("LightOverlay"):
+                overlay = ent.surf.copy()
+                alpha = 80 + int(20 * math.sin(pygame.time.get_ticks() * 0.002))
+                overlay.set_alpha(alpha)
+                self.window.blit(overlay, (0, 0))
 
     def draw_entities(self):
         for ent in self.entity_list:
@@ -44,13 +61,22 @@ class EntityManager:
                 self.window.blit(ent.surf, ent.rect)
 
     def draw_particles(self):
+        # Ambiente
+        for p in self.particles_fog:
+            p.draw(self.window)
+        for p in self.particles_ambient:
+            p.draw(self.window)
+        for p in self.particles_impact:
+            p.draw(self.window)
+
+        # Partículas dos tiros e entidades
         for ent in self.entity_list:
             if hasattr(ent, "draw_particles"):
                 ent.draw_particles(self.window)
 
     def handle_collisions(self):
-        EntityMediator.verify_collision(self.entity_list)
-        EntityMediator.verify_health(self.entity_list)
+        EntityMediator.verify_collision(self, self.entity_list)
+        EntityMediator.verify_health(self, self.entity_list)
 
     def get_players(self):
         return [e for e in self.entity_list if isinstance(e, Player)]
@@ -63,3 +89,26 @@ class EntityManager:
 
     def add_entity(self, entity):
         self.entity_list.append(entity)
+
+    def update_visual_effects(self):
+        # Partículas flutuantes
+        if self.enable_ambient_particles:
+            if len(self.particles_ambient) < 30:
+                self.particles_ambient.append(AmbientFloatParticle(self.window.get_size()))
+            for p in self.particles_ambient[:]:
+                p.update()
+                if p.lifetime <= 0:
+                    self.particles_ambient.remove(p)
+
+        # Névoa mágica
+        if self.enable_magic_fog:
+            if len(self.particles_fog) < 8:
+                self.particles_fog.append(MagicFogParticle(self.window.get_size()))
+            for p in self.particles_fog:
+                p.update()
+
+        # Impacto: já tratado nos próprios objetos
+        for p in self.particles_impact[:]:
+            p.update()
+            if p.lifetime <= 0:
+                self.particles_impact.remove(p)

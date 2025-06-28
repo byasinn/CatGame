@@ -9,8 +9,9 @@ from code.playershot import PlayerShot
 
 
 class Player(Entity):
-    def __init__(self, name: str, position: tuple):
+    def __init__(self, name: str, position: tuple, window):
         super().__init__(name, position)
+        self.window = window
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.damage_flash_timer = 0
 

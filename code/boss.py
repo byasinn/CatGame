@@ -6,8 +6,9 @@ import pygame
 import random
 
 class Boss(Entity):
-    def __init__(self, name: str, position: tuple):
+    def __init__(self, name: str, position: tuple, window):
         super().__init__(name, position)
+        self.window = window
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.direction = 1  # 1 = descendo, -1 = subindo
 
