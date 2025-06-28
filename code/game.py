@@ -4,22 +4,41 @@ import pygame
 from code.const import WIN_WIDTH, WIN_HEIGHT, MENU_OPTION
 from code.level import Level
 from code.menu import Menu
+from code.score import Score
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode(size=(WIN_WIDTH, WIN_HEIGHT))
+        flags = pygame.HWSURFACE | pygame.DOUBLEBUF
+        self.window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags)
 
     def run(self):
 
         while True:
+            score = Score(self.window)
             menu = Menu(self.window)
             menu_return = menu.run()
 
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1], MENU_OPTION[2]]:
-                level = Level(self.window, 'Level1', menu_return)
-                level_return = level.run()
+                self.show_intro_dialogue(menu_return, phase=1)
+                player_score = [0, 0]
+                level = Level(self.window, 'Level1', menu_return, player_score)
+                level_return = level.run(player_score)
+                if level_return:
+                    self.show_intro_dialogue(menu_return, phase=2)
+                    level = Level(self.window, 'Level2', menu_return, player_score)
+                    level_return = level.run(player_score)
+                    if level_return:
+                        self.show_intro_dialogue(menu_return, phase=3)
+                        level = Level(self.window, 'Level3', menu_return, player_score)
+                        level_return = level.run(player_score)
+                        if level_return:
+                            score.save(menu_return, player_score)
+
+            elif menu_return == MENU_OPTION[3]:
+                score.show()
+
             elif menu_return == MENU_OPTION[4]:
                 pygame.quit()
                 quit()
@@ -28,5 +47,59 @@ class Game:
 
 
 
+    def show_intro_dialogue(self, game_mode, phase=1):
+
+        # Gatinhos
+        leon = pygame.image.load(f"./asset/LeonMenu{'' if phase == 1 else phase}.png").convert_alpha()
+        mora = pygame.image.load(f"./asset/MoraMenu{'' if phase == 1 else phase}.png").convert_alpha()
+        leon_rect = leon.get_rect(bottomleft=(50, WIN_HEIGHT - 30))
+        mora_rect = mora.get_rect(bottomright=(WIN_WIDTH - 50, WIN_HEIGHT - 30))
+
+        # Fonte
+        font = pygame.font.Font("./asset/VT323-Regular.ttf", 22)
+
+        # Diálogos
+        if phase == 1:
+            dialogues = [
+                "Leon: Miau, parece que vamos ter um dia cheio!",
+                "Mora: Cuidado com os inimigos, viu? Eu confio em você ♥",
+                "Pressione ENTER para começar!"
+            ]
+        elif phase == 2:
+            dialogues = [
+                "Mora: Ufa, essa foi difícil!",
+                "Leon: A próxima fase vai ser ainda mais intensa, miaaau!",
+                "Preparadx? Aperte ENTER!"
+            ]
+        elif phase == 3:
+            dialogues = [
+                "Leon: É agora, o último desafio!",
+                "Mora: Mostre que você é uma verdadeira lenda felina!",
+                "Aperte ENTER e brilhe!"
+            ]
+
+        current = 0
+
+        while True:
+            self.window.fill((0, 0, 0))
+            self.window.blit(leon, leon_rect)
+            self.window.blit(mora, mora_rect)
+
+            # Renderizar texto atual
+            text = font.render(dialogues[current], True, (255, 255, 255))
+            text_rect = text.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))
+            self.window.blit(text, text_rect)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    if current < len(dialogues) - 1:
+                        current += 1
+                    else:
+                        return  # termina o diálogo e vai pro jogo
 
 
