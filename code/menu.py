@@ -39,20 +39,24 @@ class Menu:
             # Check for all events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()  # Close window
-                    quit()  # End pyGame
-                if event.type == pygame.KEYDOWN: #DOWN KEY
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         if menu_option < len(MENU_OPTION) - 1:
                             menu_option += 1
                         else:
                             menu_option = 0
-                    if event.key == pygame.K_UP: # up key
+                        self.play_sound("./asset/MenuMove.wav")
+                    if event.key == pygame.K_UP:
                         if menu_option > 0:
                             menu_option -= 1
                         else:
                             menu_option = len(MENU_OPTION) - 1
-                    if event.key == pygame.K_RETURN: # ENTER
+                        self.play_sound("./asset/MenuMove.wav")
+
+                    if event.key == pygame.K_RETURN:
+                        self.play_sound("./asset/MenuSelect.wav")
                         return MENU_OPTION[menu_option]
 
     def draw_cats(self):
@@ -78,3 +82,11 @@ class Menu:
         self.window.blit(source=text_surf, dest=text_rect)
 
         self.draw_cats()
+
+    def play_sound(self, path: str, volume: float = 0.5):
+        try:
+            sound = pygame.mixer.Sound(path)
+            sound.set_volume(volume)
+            sound.play()
+        except Exception as e:
+            print(f"[Erro ao tocar som do menu: {path}] {e}")

@@ -12,7 +12,7 @@ class Player(Entity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
-
+        self.damage_flash_timer = 0
 
     def move(self, ):
         pressed_key = pygame.key.get_pressed()
@@ -29,12 +29,23 @@ class Player(Entity):
 
         pass
 
-
     def shoot(self):
         pressed_key = pygame.key.get_pressed()
         if self.shot_delay > 0:
             self.shot_delay -= 1
         if pressed_key[PLAYER_KEY_SHOOT[self.name]] and self.shot_delay == 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+
+            # Som do tiro (carrega e toca o som correspondente ao jogador)
+            try:
+                sound = pygame.mixer.Sound(f"./asset/{self.name}Shot.mp3")
+                sound.set_volume(0.5)
+                sound.play()
+            except Exception as e:
+                print(f"[Erro ao tocar som de tiro] {e}")
+
             return PlayerShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
         return None
+
+    def take_damage_flash(self):
+        self.damage_flash_timer = 10  # quantos frames ele vai piscar vermelho

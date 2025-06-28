@@ -37,5 +37,14 @@ class Boss(Entity):
         self.shot_delay -= 1
         if self.shot_delay <= 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+
+            # Som de tiro do Boss
+            try:
+                sound = pygame.mixer.Sound("./asset/BossShot.mp3")
+                sound.set_volume(0.5)
+                sound.play()
+            except Exception as e:
+                print(f"[Erro ao tocar som do Boss] {e}")
+
             return EnemyShot(name=f"{self.name}Shot", position=(self.rect.centerx, self.rect.centery))
         return None

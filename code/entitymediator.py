@@ -1,10 +1,11 @@
+import pygame
+
 from code.const import WIN_WIDTH
 from code.enemy import Enemy
 from code.enemyshot import EnemyShot
 from code.entity import Entity
 from code.player import Player
 from code.playershot import PlayerShot
-
 
 class EntityMediator:
 
@@ -47,13 +48,19 @@ class EntityMediator:
 
         if valid_interaction:
             if (ent1.rect.right >= ent2.rect.left and
-                ent1.rect.left <= ent2.rect.right and
-                ent1.rect.bottom >= ent2.rect.top and
-                ent1.rect.top <= ent2.rect.bottom):
+                    ent1.rect.left <= ent2.rect.right and
+                    ent1.rect.bottom >= ent2.rect.top and
+                    ent1.rect.top <= ent2.rect.bottom):
                 ent1.health -= ent2.damage
                 ent2.health -= ent1.damage
                 ent1.last_dmg = ent2.name
                 ent2.last_dmg = ent1.name
+
+                # Feedback visual ao levar dano
+                if isinstance(ent1, Player):
+                    ent1.take_damage_flash()
+                if isinstance(ent2, Player):
+                    ent2.take_damage_flash()
 
     @staticmethod
     def __give_score(enemy: Entity, entity_list: list[Entity]):
@@ -77,8 +84,28 @@ class EntityMediator:
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        for ent in entity_list:
+        for ent in entity_list[:]:  # itera sobre cópia para remoção segura
             if ent.health <= 0:
-                if isinstance(ent, Enemy) or ent.name == "Boss":
+                if isinstance(ent, Enemy):
                     EntityMediator.__give_score(ent, entity_list)
+
+                    # Toca som de morte sem cortar música
+                    try:
+                        sound = pygame.mixer.Sound(f"./asset/{ent.name}Death.mp3")
+                        sound.set_volume(0.6)
+                        sound.play()
+                    except Exception as e:
+                        print(f"[Erro ao tocar som de morte de {ent.name}] {e}")
+
+                elif ent.name == "Boss":
+                    EntityMediator.__give_score(ent, entity_list)
+
+                    try:
+                        sound = pygame.mixer.Sound("./asset/BossDeath.mp3")
+                        sound.set_volume(0.7)
+                        sound.play()
+                    except Exception as e:
+                        print(f"[Erro ao tocar som de morte do Boss] {e}")
+
                 entity_list.remove(ent)
+

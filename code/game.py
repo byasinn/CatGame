@@ -5,7 +5,7 @@ from code.const import WIN_WIDTH, WIN_HEIGHT, MENU_OPTION
 from code.level import Level
 from code.menu import Menu
 from code.score import Score
-
+from code.gameover import GameOver
 
 class Game:
     def __init__(self):
@@ -14,6 +14,7 @@ class Game:
         self.window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags)
 
     def run(self):
+        self.show_intro_screen()
 
         while True:
             score = Score(self.window)
@@ -23,18 +24,28 @@ class Game:
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1], MENU_OPTION[2]]:
                 self.show_intro_dialogue(menu_return, phase=1)
                 player_score = [0, 0]
+
                 level = Level(self.window, 'Level1', menu_return, player_score)
                 level_return = level.run(player_score)
-                if level_return:
-                    self.show_intro_dialogue(menu_return, phase=2)
-                    level = Level(self.window, 'Level2', menu_return, player_score)
-                    level_return = level.run(player_score)
-                    if level_return:
-                        self.show_intro_dialogue(menu_return, phase=3)
-                        level = Level(self.window, 'Level3', menu_return, player_score)
-                        level_return = level.run(player_score)
-                        if level_return:
-                            score.save(menu_return, player_score)
+                if not level_return:
+                    GameOver(self.window).show()
+                    continue
+
+                self.show_intro_dialogue(menu_return, phase=2)
+                level = Level(self.window, 'Level2', menu_return, player_score)
+                level_return = level.run(player_score)
+                if not level_return:
+                    GameOver(self.window).show()
+                    continue
+
+                self.show_intro_dialogue(menu_return, phase=3)
+                level = Level(self.window, 'Level3', menu_return, player_score)
+                level_return = level.run(player_score)
+                if not level_return:
+                    GameOver(self.window).show()
+                    continue
+
+                score.save(menu_return, player_score)
 
             elif menu_return == MENU_OPTION[3]:
                 score.show()
@@ -45,7 +56,30 @@ class Game:
             else:
                 pass
 
+    def show_intro_screen(self):
+        intro_img = pygame.image.load("./asset/IntroScreen.png").convert_alpha()
+        intro_img = pygame.transform.scale(intro_img, (WIN_WIDTH, WIN_HEIGHT))
 
+        pygame.mixer_music.load("./asset/intro.mp3")
+        pygame.mixer_music.play()
+
+        clock = pygame.time.Clock()
+        start_time = pygame.time.get_ticks()
+
+        while pygame.time.get_ticks() - start_time < 5000:  # 5 segundos
+            self.window.fill((0, 0, 0))
+            alpha = min(255, int((pygame.time.get_ticks() - start_time) / 20))
+            img_copy = intro_img.copy()
+            img_copy.set_alpha(alpha)
+            self.window.blit(img_copy, (0, 0))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            clock.tick(60)
 
     def show_intro_dialogue(self, game_mode, phase=1):
 

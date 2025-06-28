@@ -11,6 +11,7 @@ COLOR_YELLOW = (255, 255, 0)
 EVENT_ENEMY = pygame.USEREVENT + 1
 EVENT_TIMEOUT = pygame.USEREVENT + 2
 ENTITY_SPEED = {
+    'LightOverlay_Level1': 0,
     'Level1Bg0' : 0,
     'Level1Bg1' : 1,
     'Level1Bg2' : 2,
@@ -22,9 +23,9 @@ ENTITY_SPEED = {
     "Player1Shot": 6,
     "Player2": 3,
     "Player2Shot": 6,
-    "Enemy1": 1,
+    "Enemy1": 2,
     "Enemy1Shot": 5,
-    "Enemy2": 1,
+    "Enemy2": 2,
     "Enemy2Shot": 3,
 
     'Level2Bg0': 0,
@@ -34,17 +35,23 @@ ENTITY_SPEED = {
 
     'Level3Bg0': 0,
     'Level3Bg1': 1,
-    'Level3Bg2': 2,
-    'Level3Bg3': 3,
-    'Level3Bg4': 4,
-    'Level3Bg5': 5,
+    'Level3Bg2': 3,
+    'Level3Bg3': 2,
+    'Level3Bg4': 1,
+    'Level3Bg5': 2,
 
     'Boss' : 2,
     'BossShot': 6,
 
+    'GameOverBg0': 0,
+    'GameOverBg1': 1,
+    'GameOverBg2': 2,
+    'GameOverLight': 0,
+
 }
 
 ENTITY_HEALTH = {
+'LightOverlay_Level1': 999,
     'Level1Bg0' : 999,
     'Level1Bg1' : 999,
     'Level1Bg2' : 999,
@@ -52,7 +59,7 @@ ENTITY_HEALTH = {
     'Level1Bg4' : 999,
     'Level1Bg5' : 999,
     'Level1Bg6' : 999,
-    "Player1": 300,
+    "Player1": 200,
     "Player1Shot": 1,
     "Player2": 300,
     "Player2Shot": 1,
@@ -76,9 +83,15 @@ ENTITY_HEALTH = {
     'Boss': 500,
     'BossShot': 1,
 
+    'GameOverBg0': 999,
+    'GameOverBg1': 999,
+    'GameOverBg2': 999,
+    'GameOverLight': 999,
+
 }
 
 ENTITY_DAMAGE = {
+'LightOverlay_Level1': 0,
     'Level1Bg0' : 0,
     'Level1Bg1' : 0,
     'Level1Bg2' : 0,
@@ -109,9 +122,15 @@ ENTITY_DAMAGE = {
 
     'Boss': 1,
     'BossShot': 30,
+
+    'GameOverBg0': 0,
+    'GameOverBg1': 0,
+    'GameOverBg2': 0,
+    'GameOverLight': 0,
 }
 
 ENTITY_SCORE = {
+'LightOverlay_Level1': 0,
     'Level1Bg0' : 0,
     'Level1Bg1' : 0,
     'Level1Bg2' : 0,
@@ -143,13 +162,18 @@ ENTITY_SCORE = {
     'Boss': 1000,
     'BossShot': 0,
 
+    'GameOverBg0': 0,
+    'GameOverBg1': 0,
+    'GameOverBg2': 0,
+    'GameOverLight': 0,
+
 }
 
 ENTITY_SHOT_DELAY = {
     "Player1": 20,
     'Player2': 20,
-    "Enemy1": 100,
-    'Enemy2': 200,
+    "Enemy1": 20,
+    'Enemy2': 20,
 
     'Boss': 40,
 }

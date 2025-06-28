@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import random
 from code.background import Background
+from code.backgroundlight import BackgroundLight
 from code.boss import Boss
 from code.const import WIN_HEIGHT, WIN_WIDTH
 from code.enemy import Enemy
@@ -16,8 +17,9 @@ class EntityFactory:
             case "Level1Bg":
                 list_bg = []
                 for i in range(6):
-                    list_bg.append(Background(f'Level1Bg{i}',(0,0)))
+                    list_bg.append(Background(f'Level1Bg{i}', (0, 0)))
                     list_bg.append(Background(f'Level1Bg{i}', (WIN_WIDTH, 0)))
+                    list_bg.append(BackgroundLight("LightOverlay_Level1", (0, 0)))
                 return list_bg
             case "Level2Bg":
                 list_bg = []
@@ -42,3 +44,11 @@ class EntityFactory:
 
             case "Boss":
                 return Boss("Boss", (WIN_WIDTH // 2 + 100, WIN_HEIGHT // 2))
+
+            case "GameOverBg":
+                list_bg = []
+                for i in range(3):
+                    list_bg.append(Background(f'GameOverBg{i}', (0, 0)))
+                    list_bg.append(Background(f'GameOverBg{i}', (WIN_WIDTH, 0)))
+                list_bg.append(BackgroundLight("GameOverLight", (0, 0)))
+                return list_bg
