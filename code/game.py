@@ -1,17 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import pygame
-from code.const import WIN_WIDTH, WIN_HEIGHT, MENU_OPTION
+
+from code import settings
 from code.level import Level
 from code.menu import Menu
 from code.score import Score
 from code.gameover import GameOver
+from code.const import MENU_OPTION
+from code.settingsmenu import SettingsMenu
 
 class Game:
     def __init__(self):
         pygame.init()
         flags = pygame.HWSURFACE | pygame.DOUBLEBUF
-        self.window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags)
+        self.window = settings.apply_resolution()
 
     def run(self):
         self.show_intro_screen()
@@ -50,7 +53,12 @@ class Game:
             elif menu_return == MENU_OPTION[3]:
                 score.show()
 
-            elif menu_return == MENU_OPTION[4]:
+
+            elif menu_return == MENU_OPTION[4]:  # SETTINGS
+                from code.settingsmenu import SettingsMenu
+                SettingsMenu(self.window).run()
+
+            elif menu_return == MENU_OPTION[5]:
                 pygame.quit()
                 quit()
             else:
@@ -58,7 +66,7 @@ class Game:
 
     def show_intro_screen(self):
         intro_img = pygame.image.load("./asset/IntroScreen.png").convert_alpha()
-        intro_img = pygame.transform.scale(intro_img, (WIN_WIDTH, WIN_HEIGHT))
+        intro_img = pygame.transform.scale(intro_img, (self.window.get_width(), self.window.get_height()))
 
         pygame.mixer_music.load("./asset/intro.mp3")
         pygame.mixer_music.play()
@@ -86,8 +94,8 @@ class Game:
         # Gatinhos
         leon = pygame.image.load(f"./asset/LeonMenu{'' if phase == 1 else phase}.png").convert_alpha()
         mora = pygame.image.load(f"./asset/MoraMenu{'' if phase == 1 else phase}.png").convert_alpha()
-        leon_rect = leon.get_rect(bottomleft=(50, WIN_HEIGHT - 30))
-        mora_rect = mora.get_rect(bottomright=(WIN_WIDTH - 50, WIN_HEIGHT - 30))
+        leon_rect = leon.get_rect(bottomleft=(50, self.window.get_height() - 30))
+        mora_rect = mora.get_rect(bottomright=(self.window.get_width() - 50, self.window.get_height() - 30))
 
         # Fonte
         font = pygame.font.Font("./asset/VT323-Regular.ttf", 22)
@@ -121,7 +129,7 @@ class Game:
 
             # Renderizar texto atual
             text = font.render(dialogues[current], True, (255, 255, 255))
-            text_rect = text.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))
+            text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
             self.window.blit(text, text_rect)
 
             pygame.display.flip()

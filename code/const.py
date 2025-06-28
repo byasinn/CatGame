@@ -178,11 +178,14 @@ ENTITY_SHOT_DELAY = {
     'Boss': 40,
 }
 # M
-MENU_OPTION = ('NEW GAME 1P',
-               'NEW GAME 2P - COOPERATIVE',
-               'NEW GAME 2P - COMPETITIVE',
-               'SCORE',
-               'EXIT')
+MENU_OPTION = (
+                'NEW GAME 1P',
+                'NEW GAME 2P - COOPERATIVE',
+                'NEW GAME 2P - COMPETITIVE',
+                'SCORE',
+                'SETTINGS',
+                'EXIT'
+)
 
 # T
 TIMEOUT_STEP = 100

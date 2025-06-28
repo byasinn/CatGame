@@ -5,7 +5,7 @@ import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
 
-from code.const import WIN_WIDTH, MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.const import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 
 class Menu:
@@ -15,25 +15,29 @@ class Menu:
         self.rect = self.surf.get_rect(left=0, top=0)
         self.cat_left = pygame.image.load("./asset/LeonMenu.png").convert_alpha()
         self.cat_right = pygame.image.load("./asset/MoraMenu.png").convert_alpha()
-        self.cat_left_rect = self.cat_left.get_rect(center=(WIN_WIDTH // 2 - 150, 95))
-        self.cat_right_rect = self.cat_right.get_rect(center=(WIN_WIDTH // 2 + 150, 95))
+        self.cat_left_rect = self.cat_left.get_rect(center=(self.window.get_width() // 2 - 150, 95))
+        self.cat_right_rect = self.cat_right.get_rect(center=(self.window.get_width() // 2 + 150, 95))
         self.cat_angle = 0
 
     def run(self, ):
         menu_option = 0
         pygame.mixer_music.load('./asset/Menu.mp3')
         pygame.mixer_music.play(-1)
+
+        img_scaled = pygame.transform.scale(self.surf, self.window.get_size())
+        self.window.blit(source=img_scaled, dest=self.rect)
+
         while True:
             # draw images
             self.window.blit(source=self.surf, dest=self.rect)
-            self.menu_text(50, "Mora", COLOR_PINK, ((WIN_WIDTH / 2), 70), is_title=True)
-            self.menu_text(50, "Migos", COLOR_WHITE, ((WIN_WIDTH / 2), 120), is_title=True)
+            self.menu_text(50, "Mora", COLOR_PINK, ((self.window.get_width() / 2), 70), is_title=True)
+            self.menu_text(50, "Migos", COLOR_WHITE, ((self.window.get_width() / 2), 120), is_title=True)
 
             for i in range(len(MENU_OPTION)):
                 if i == menu_option:
-                    self.menu_text(20, MENU_OPTION[i], COLOR_YELLOW, ((WIN_WIDTH / 2), 200 + 25 * i), is_title=False)
+                    self.menu_text(20, MENU_OPTION[i], COLOR_YELLOW, ((self.window.get_width() / 2), 200 + 25 * i), is_title=False)
                 else:
-                    self.menu_text(20, MENU_OPTION[i], COLOR_WHITE, ((WIN_WIDTH / 2), 200 + 25 * i), is_title=False)
+                    self.menu_text(20, MENU_OPTION[i], COLOR_WHITE, ((self.window.get_width() / 2), 200 + 25 * i), is_title=False)
             pygame.display.flip()
 
             # Check for all events
