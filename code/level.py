@@ -7,13 +7,14 @@ import pygame
 from pygame import Surface, Rect
 from pygame.font import Font
 from code.background import Background
-from code.const import WIN_HEIGHT, COLOR_WHITE, MENU_OPTION, EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_STEP, \
+from code.const import MENU_OPTION, EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_STEP, \
     TIMEOUT_LEVEL
 from code.enemy import Enemy
 from code.player import Player
 from code.entity import Entity
 from code.entityFactory import EntityFactory
 from code.entitymediator import EntityMediator
+from code.hud import HUDRenderer
 
 
 class Level:
@@ -27,6 +28,8 @@ class Level:
         player = EntityFactory.get_entity('Player1')
         player.score = player_score[0]
         self.entity_list.append(player)
+        self.hud = HUDRenderer(self.window)
+
         if game_mode in [MENU_OPTION[1],MENU_OPTION[2]]:
             player = EntityFactory.get_entity('Player2')
             player.score = player_score[1]
@@ -35,6 +38,12 @@ class Level:
         self.boss_summoned = False
         self.boss_delay = 5000  # 5 segundos em ms
         self.boss_timer = 0
+
+        self.game_mode_str = {  # mapear texto para string
+            MENU_OPTION[0]: "Solo",
+            MENU_OPTION[1]: "Coop",
+            MENU_OPTION[2]: "Versus",
+        }[game_mode]
 
         if self.name == "Level1":
             self.sunlight = pygame.image.load("./asset/LightOverlay_Level1.png").convert_alpha()
@@ -98,25 +107,28 @@ class Level:
                 if hasattr(ent, "draw_particles"):
                     ent.draw_particles(self.window)
 
-            # --- HUD ---
-            for ent in self.entity_list:
-                if ent.name == "Player1":
-                    self.level_text(14, f'Mora - Health: {ent.health} | Score: {ent.score}', COLOR_WHITE, (10, 25))
-                if ent.name == "Player2":
-                    self.level_text(14, f'Leon - Health: {ent.health} | Score: {ent.score}', COLOR_WHITE, (10, 45))
-
-            if not (self.name == "Level3" and self.boss_summoned):
-                self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000 : .1f}s', COLOR_WHITE, (10, 5))
-
-            self.level_text(14, f'fps: {clock.get_fps() :.0f}', COLOR_WHITE, (10, WIN_HEIGHT - 35))
-            self.level_text(24, f'entidades: {len(self.entity_list)}', COLOR_WHITE, (10, WIN_HEIGHT - 20))
-
             players_alive = any(isinstance(ent, Player) for ent in self.entity_list)
             if not players_alive:
                 return False  # fim do jogo
 
 
-            pygame.display.flip()
+            # --- Chamada do HUD ---
+            players = [e for e in self.entity_list if e.name in ["Player1", "Player2"]]
+            self.hud.draw_hud(
+                players=players,
+                level_name=self.name,
+                timeout=self.timeout,
+                boss_summoned=self.boss_summoned,
+                fps=clock.get_fps(),
+                entity_count=len(self.entity_list)
+            )
+            for ent in self.entity_list:
+                if isinstance(ent, Player):
+                    if ent.name == "Player1":
+                        player_score[0] = ent.score
+                    elif ent.name == "Player2":
+                        player_score[1] = ent.score
+            self.hud.draw_score(self.game_mode_str, player_score, pygame.time.get_ticks())
 
             # --- EVENTOS ---
             for event in pygame.event.get():
@@ -161,10 +173,6 @@ class Level:
                             player_score[1] = ent.score
                     return True
 
-    pass
+            pygame.display.flip()
 
-    def level_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
-        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
-        self.window.blit(source=text_surf, dest=text_rect)
+    pass
