@@ -1,10 +1,8 @@
 import sys
 from datetime import datetime
-
 import pygame
 from pygame import Surface, Rect, event, K_RETURN, K_BACKSPACE, K_ESCAPE
 from pygame.font import Font
-
 from code.const import COLOR_PINK, SCORE_POS, MENU_OPTION, COLOR_WHITE
 from code.dbproxy import DBProxy
 

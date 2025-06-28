@@ -1,5 +1,4 @@
 import math
-
 import pygame
 from pygame import Surface
 from code.const import WIN_HEIGHT, COLOR_WHITE, COLOR_PINK, COLOR_YELLOW
