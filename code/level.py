@@ -6,7 +6,7 @@ import sys
 import pygame
 from pygame import Surface, Rect
 from pygame.font import Font
-
+from code.settings.settingsmanager import SettingsManager
 from code.assetmanager import AssetManager
 from code.background import Background
 from code.const import MENU_OPTION, EVENT_ENEMY
@@ -49,6 +49,8 @@ class Level:
         self.event_controller = EventController(self.entity_manager, EntityFactory)
         self.hud = HUDRenderer(self.window)
         self.timer = TimerController(self.name)
+        self.entity_manager.enable_ambient_particles = SettingsManager.get("visual_effects")
+        self.entity_manager.enable_magic_fog = SettingsManager.get("visual_effects")
 
         if "COMPETITIVE" in game_mode:
             self.game_mode_str = "Competitivo"

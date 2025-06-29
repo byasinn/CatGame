@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import math
+import sys
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
-
+from code.lang import t
 from code.assetmanager import AssetManager
 from code.audiocontroller import AudioController
 from code.const import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
@@ -34,14 +35,13 @@ class Menu:
         while True:
             # draw images
             self.window.blit(source=self.surf, dest=self.rect)
-            self.menu_text(50, "Mora", COLOR_PINK, ((self.window.get_width() / 2), 70), is_title=True)
-            self.menu_text(50, "Migos", COLOR_WHITE, ((self.window.get_width() / 2), 120), is_title=True)
+            self.menu_text(50, t("title_main1"), COLOR_PINK, ((self.window.get_width() / 2), 70), is_title=True)
+            self.menu_text(50, t("title_main2"), COLOR_WHITE, ((self.window.get_width() / 2), 120), is_title=True)
 
-            for i in range(len(MENU_OPTION)):
-                if i == menu_option:
-                    self.menu_text(20, MENU_OPTION[i], COLOR_YELLOW, ((self.window.get_width() / 2), 200 + 25 * i), is_title=False)
-                else:
-                    self.menu_text(20, MENU_OPTION[i], COLOR_WHITE, ((self.window.get_width() / 2), 200 + 25 * i), is_title=False)
+            options = [t("new_game"), t("score"), t("settings"), t("exit")]
+            for i in range(len(options)):
+                color = COLOR_YELLOW if i == menu_option else COLOR_WHITE
+                self.menu_text(20, options[i], color, ((self.window.get_width() / 2), 200 + 25 * i))
             pygame.display.flip()
 
             # Check for all events
@@ -65,26 +65,28 @@ class Menu:
 
                     if event.key == pygame.K_RETURN:
                         self.audio.play_sound("menu_select")
-                        return MENU_OPTION[menu_option]
+                        return ["NEW GAME", "SCORE", "SETTINGS", "EXIT"][menu_option]
 
     def select_mode(self):
-        return self.run_options(["CAMPANHA", "ARCADE"], "Tipo de Jogo")
+        return self.run_options(["campaign", "arcade"], "mode_select_title")
 
     def select_campaign_mode(self):
-        return self.run_options(["SOLO", "COOPERATIVO"], "Campanha")
+        return self.run_options(["solo", "cooperative"], "campaign")
 
     def select_arcade_mode(self):
-        return self.run_options(["SOLO", "COMPETITIVO"], "Arcade")
+        return self.run_options(["solo", "competitive"], "arcade")
 
     def run_options(self, options, title):
         selected = 0
+
         while True:
             self.window.blit(self.surf, self.rect)
-            self.menu_text(40, title, COLOR_PINK, (self.window.get_width() // 2, 70), True)
+            self.menu_text(40,t(title), COLOR_PINK, (self.window.get_width() // 2, 70), True)
 
-            for i, opt in enumerate(options):
+            options_translated = [t(opt.lower()) for opt in options]
+            for i, label in enumerate(options_translated):
                 color = COLOR_YELLOW if i == selected else COLOR_WHITE
-                self.menu_text(24, opt, color, (self.window.get_width() // 2, 150 + i * 40), False)
+                self.menu_text(24, label, color, (self.window.get_width() // 2, 150 + i * 40), False)
 
             pygame.display.flip()
 

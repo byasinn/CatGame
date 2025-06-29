@@ -2,22 +2,23 @@
 # -*- coding: utf-8 -*-
 import sys
 import pygame
-from code import settings
+from code.settings.display import apply_resolution
+from code.settings.settingsmenu import SettingsMenu
 from code.assetmanager import AssetManager
 from code.level import Level
 from code.menu import Menu
 from code.score import Score
 from code.gameover import GameOver
 from code.const import MENU_OPTION
-from code.settingsmenu import SettingsMenu
+from code.settings.settingsmenu import SettingsMenu
 from code.audiocontroller import AudioController
-
+from code.lang import t
 
 class Game:
     def __init__(self):
         pygame.init()
         flags = pygame.HWSURFACE | pygame.DOUBLEBUF
-        self.window = settings.apply_resolution()
+        self.window = apply_resolution()
         self.audio = AudioController()
 
     def run(self):
@@ -139,25 +140,7 @@ class Game:
         font = AssetManager.get_font("VT323-Regular.ttf", 22)
 
         # Diálogos
-        if phase == 1:
-            dialogues = [
-                "Leon: Miau, parece que vamos ter um dia cheio!",
-                "Mora: Cuidado com os inimigos, viu? Eu confio em você ♥",
-                "Pressione ENTER para começar!"
-            ]
-        elif phase == 2:
-            dialogues = [
-                "Mora: Ufa, essa foi difícil!",
-                "Leon: A próxima fase vai ser ainda mais intensa, miaaau!",
-                "Preparadx? Aperte ENTER!"
-            ]
-        elif phase == 3:
-            dialogues = [
-                "Leon: É agora, o último desafio!",
-                "Mora: Mostre que você é uma verdadeira lenda felina!",
-                "Aperte ENTER e brilhe!"
-            ]
-
+        dialogues = [t(f"cutscene{phase}_{i + 1}") for i in range(3)]
 
         current = 0
 
