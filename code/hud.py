@@ -2,34 +2,29 @@ import math
 import pygame
 from pygame import Surface
 from code.const import COLOR_WHITE, COLOR_PINK, COLOR_YELLOW
-
+from code.assetmanager import AssetManager
 
 class HUDRenderer:
     def __init__(self, window: Surface):
         self.window = window
         self.font_cache = {}
-        self.heart_img = pygame.image.load("./asset/Heart.png").convert_alpha()
+        self.heart_img = AssetManager.get_image("Heart.png")
         self.heart_img = pygame.transform.scale(self.heart_img, (20, 20))  # reduzido para novo HUD fino
         self.cat_heads = {
-            "Player1": pygame.image.load("./asset/Player1Head.png").convert_alpha(),
-            "Player2": pygame.image.load("./asset/Player2Head.png").convert_alpha(),
-            "Team": pygame.image.load("./asset/TeamHead.png").convert_alpha(),
-            "Player1Competitive": pygame.image.load("./asset/Player1Competitive.png").convert_alpha(),
-            "Player2Competitive": pygame.image.load("./asset/Player2Competitive.png").convert_alpha(),
+            "Player1": AssetManager.get_image("Player1Head.png"),
+            "Player2": AssetManager.get_image("Player2Head.png"),
+            "Team": AssetManager.get_image("TeamHead.png"),
+            "Player1Competitive": AssetManager.get_image("Player1Competitive.png"),
+            "Player2Competitive": AssetManager.get_image("Player2Competitive.png"),
         }
         self.last_scores = {"Player1": 0, "Player2": 0}
 
     def draw_text(self, size: int, text: str, color: tuple, pos: tuple, is_title: bool = False):
-        font_path = "./asset/PressStart2P-Regular.ttf" if is_title else "./asset/VT323-Regular.ttf"
-        cache_key = (size, font_path)
-
-        if cache_key not in self.font_cache:
-            self.font_cache[cache_key] = pygame.font.Font(font_path, size)
-
-        font = self.font_cache[cache_key]
-        surf = font.render(text, True, color).convert_alpha()
-        rect = surf.get_rect(left=pos[0], top=pos[1])
-        self.window.blit(surf, rect)
+        font_file = "PressStart2P-Regular.ttf" if is_title else "VT323-Regular.ttf"
+        font = AssetManager.get_font(font_file, size)
+        text_surf = font.render(text, True, color).convert_alpha()
+        text_rect = text_surf.get_rect(left=pos[0], top=pos[1])
+        self.window.blit(text_surf, text_rect)
 
     def draw_hud(self, players: list, level_name: str, timeout: int, boss_summoned: bool, fps: float, entity_count: int):
         # Novo HUD mais fino (altura menor)

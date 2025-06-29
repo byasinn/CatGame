@@ -6,6 +6,8 @@ import sys
 import pygame
 from pygame import Surface, Rect
 from pygame.font import Font
+
+from code.assetmanager import AssetManager
 from code.background import Background
 from code.const import MENU_OPTION, EVENT_ENEMY
 from code.entitymanager import EntityManager
@@ -63,13 +65,11 @@ class Level:
             self.timer = TimerController(self.name)
 
         if self.name == "Level1":
-            self.sunlight = pygame.image.load("./asset/LightOverlay_Level1.png").convert_alpha()
-
+            self.sunlight = AssetManager.get_image("LightOverlay_Level1.png")
         elif self.name == "Level2":
-            self.sunlight = pygame.image.load("./asset/LightOverlay_Level2.png").convert_alpha()
-
+            self.sunlight = AssetManager.get_image("LightOverlay_Level2.png")
         elif self.name == "Level3":
-            self.sunlight = pygame.image.load("./asset/LightOverlay_Level2.png").convert_alpha()
+            self.sunlight = AssetManager.get_image("LightOverlay_Level2.png")
 
 
     def run(self, player_score: list[int]):
@@ -87,7 +87,7 @@ class Level:
 
         for ent in self.entity_list:
             if ent.name.startswith("LightOverlay"):
-                raw = pygame.image.load(f"./asset/{ent.name}.png").convert_alpha()
+                raw = AssetManager.get_image(f"{ent.name}.png")
                 w, h = self.window.get_size()
                 ent.surf = pygame.transform.scale(raw, (w, h))
 

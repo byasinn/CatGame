@@ -1,14 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import math
 import random
-
-from code.const import ENTITY_SPEED, WIN_WIDTH, ENTITY_SHOT_DELAY, WIN_HEIGHT
+import pygame
+from code.const import ENTITY_SPEED, ENTITY_SHOT_DELAY
 from code.enemyshot import EnemyShot
-from code.entity import Entity
+from code.CombatEntity.combatentity import CombatEntity
 
-
-class Enemy(Entity):
-
+class Enemy(CombatEntity):
     def __init__(self, name: str, position: tuple, window):
         super().__init__(name, position)
         self.window = window
@@ -21,17 +20,12 @@ class Enemy(Entity):
         self.rect.centerx -= ENTITY_SPEED[self.name]
 
         if self.name == "Enemy2":
-            # Zigzag vertical aleatório
             if self.zigzag_timer > 0:
                 next_y = self.rect.centery + self.zigzag_direction * 2
-
-                # Limites da tela (com margem)
-                if 30 < next_y < WIN_HEIGHT - 30:
+                if 30 < next_y < self.window.get_height() - 30:
                     self.rect.centery = next_y
-
                 self.zigzag_timer -= 1
             else:
-                # 30% de chance de iniciar zigzag
                 if random.random() < 0.3:
                     self.zigzag_direction = random.choice([-1, 1])
                     self.zigzag_timer = random.randint(20, 60)
@@ -40,10 +34,8 @@ class Enemy(Entity):
 
     def shoot(self):
         self.shot_delay -= 1
-        if self.shot_delay == 0:
+        if self.shot_delay <= 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
-
-            # Som do tiro do inimigo
             try:
                 sound = pygame.mixer.Sound(f"./asset/{self.name}Shot.mp3")
                 sound.set_volume(0.4)
@@ -53,3 +45,13 @@ class Enemy(Entity):
 
             return EnemyShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
         return None
+
+    def draw(self, surface):
+        if self.name == "Enemy2":
+            offset = math.sin(pygame.time.get_ticks() * 0.005 + self.rect.x * 0.01) * 1.5
+            angle = math.sin(pygame.time.get_ticks() * 0.002 + self.rect.x * 0.01) * 3
+            rotated = pygame.transform.rotate(self.image, angle)
+            rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
+            surface.blit(rotated, rect)
+        else:
+            surface.blit(self.image, self.rect)

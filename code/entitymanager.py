@@ -2,8 +2,8 @@ import math
 import pygame
 from code.entity import Entity
 from code.particle import AmbientFloatParticle, MagicFogParticle
-from code.player import Player
-from code.enemy import Enemy
+from code.CombatEntity.player import Player
+from code.CombatEntity.enemy import Enemy
 from code.background import Background
 from code.entitymediator import EntityMediator
 
@@ -50,29 +50,10 @@ class EntityManager:
 
     def draw_entities(self):
         for ent in self.entity_list:
-            if isinstance(ent, Player):
-                offset = math.sin(pygame.time.get_ticks() * 0.005) * 2
-                angle = math.sin(pygame.time.get_ticks() * 0.002) * 5
-                surf = pygame.transform.rotate(ent.surf, angle)
-
-                if ent.damage_flash_timer > 0:
-                    ent.damage_flash_timer -= 1
-
-                    mask = pygame.mask.from_surface(surf)
-                    red_overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
-
-                    for x in range(surf.get_width()):
-                        for y in range(surf.get_height()):
-                            if mask.get_at((x, y)):
-                                red_overlay.set_at((x, y), (255, 0, 0, 120))
-
-                    surf.blit(red_overlay, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
-
-                rect = surf.get_rect(center=(ent.rect.centerx, ent.rect.centery + offset))
-                self.window.blit(surf, rect)
-
+            if hasattr(ent, "draw"):
+                ent.draw(self.window)
             elif not isinstance(ent, Background) and not ent.name.startswith("LightOverlay"):
-                self.window.blit(ent.surf, ent.rect)
+                self.window.blit(ent.image, ent.rect)
 
     def draw_particles(self):
         # Ambiente

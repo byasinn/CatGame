@@ -4,6 +4,9 @@ import sys
 import math
 import pygame
 from pygame import Surface
+
+from code.assetmanager import AssetManager
+from code.audiocontroller import AudioController
 from code.const import WIN_WIDTH, WIN_HEIGHT
 from code.entityFactory import EntityFactory
 
@@ -13,9 +16,9 @@ class GameOver:
         self.bg_layers = EntityFactory.get_entity("GameOverBg")
 
         # Sprites
-        self.mora_dead = pygame.image.load("./asset/MoraDead.png").convert_alpha()
-        self.leon_dead = pygame.image.load("./asset/LeonDead.png").convert_alpha()
-        self.text = pygame.image.load("./asset/GameOverText.png").convert_alpha()
+        self.mora_dead = AssetManager.get_image("MoraDead.png")
+        self.leon_dead = AssetManager.get_image("LeonDead.png")
+        self.text = AssetManager.get_image("GameOverText.png")
 
         # Resize e posicionamento
 
@@ -23,8 +26,7 @@ class GameOver:
         self.angle = 0
 
     def show(self):
-        pygame.mixer_music.load("./asset/GameOver.mp3")
-        pygame.mixer_music.play(-1)
+        AudioController().play_music("gameover")
 
         while True:
             self.clock.tick(60)

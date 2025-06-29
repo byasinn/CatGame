@@ -3,6 +3,7 @@
 import sys
 import pygame
 from code import settings
+from code.assetmanager import AssetManager
 from code.level import Level
 from code.menu import Menu
 from code.score import Score
@@ -98,7 +99,7 @@ class Game:
                 quit()
 
     def show_intro_screen(self):
-        intro_img = pygame.image.load("./asset/IntroScreen.png").convert_alpha()
+        intro_img = AssetManager.get_image("IntroScreen.png")
         intro_img = pygame.transform.scale(intro_img, (self.window.get_width(), self.window.get_height()))
 
         if not pygame.mixer_music.get_busy():
@@ -129,13 +130,13 @@ class Game:
     def show_intro_dialogue(self, game_mode, phase=1):
 
         # Gatinhos
-        leon = pygame.image.load(f"./asset/LeonMenu{'' if phase == 1 else phase}.png").convert_alpha()
-        mora = pygame.image.load(f"./asset/MoraMenu{'' if phase == 1 else phase}.png").convert_alpha()
+        leon = AssetManager.get_image(f"LeonMenu{'' if phase == 1 else phase}.png")
+        mora = AssetManager.get_image(f"MoraMenu{'' if phase == 1 else phase}.png")
         leon_rect = leon.get_rect(bottomleft=(50, self.window.get_height() - 30))
         mora_rect = mora.get_rect(bottomright=(self.window.get_width() - 50, self.window.get_height() - 30))
 
         # Fonte
-        font = pygame.font.Font("./asset/VT323-Regular.ttf", 22)
+        font = AssetManager.get_font("VT323-Regular.ttf", 22)
 
         # Diálogos
         if phase == 1:

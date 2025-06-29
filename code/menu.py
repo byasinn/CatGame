@@ -4,6 +4,8 @@ import math
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
+
+from code.assetmanager import AssetManager
 from code.audiocontroller import AudioController
 from code.const import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
@@ -12,11 +14,11 @@ class Menu:
     def __init__(self, window, audio_controller):
         self.window = window
         self.audio = audio_controller
-        raw_bg = pygame.image.load("./asset/MenuBg.png").convert()
+        raw_bg = AssetManager.get_image("MenuBg.png").convert()
         self.surf = pygame.transform.scale(raw_bg, self.window.get_size())
         self.rect = self.surf.get_rect(left=0, top=0)
-        self.cat_left = pygame.image.load("./asset/LeonMenu.png").convert_alpha()
-        self.cat_right = pygame.image.load("./asset/MoraMenu.png").convert_alpha()
+        self.cat_left = AssetManager.get_image("LeonMenu.png")
+        self.cat_right = AssetManager.get_image("MoraMenu.png")
         self.cat_left_rect = self.cat_left.get_rect(center=(self.window.get_width() // 2 - 150, 95))
         self.cat_right_rect = self.cat_right.get_rect(center=(self.window.get_width() // 2 + 150, 95))
         self.cat_angle = 0
@@ -119,8 +121,8 @@ class Menu:
         self.window.blit(rotated_right, right_rect)
 
     def menu_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple, is_title: bool = False):
-        font_path = "./asset/PressStart2P-Regular.ttf" if is_title else "./asset/VT323-Regular.ttf"
-        text_font: Font = pygame.font.Font(font_path, text_size)
+        font_name = "PressStart2P-Regular.ttf" if is_title else "VT323-Regular.ttf"
+        text_font: Font = AssetManager.get_font(font_name, text_size)
         text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
         text_rect: Rect = text_surf.get_rect(center=text_center_pos)
         self.window.blit(source=text_surf, dest=text_rect)

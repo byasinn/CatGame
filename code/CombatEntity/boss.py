@@ -1,11 +1,12 @@
-from code.entity import Entity
-from code.enemyshot import EnemyShot
-from code.const import ENTITY_SHOT_DELAY, ENTITY_SPEED, WIN_HEIGHT, WIN_WIDTH
+import math
 
 import pygame
 import random
+from code.const import ENTITY_SHOT_DELAY, ENTITY_SPEED
+from code.enemyshot import EnemyShot
+from code.CombatEntity.combatentity import CombatEntity
 
-class Boss(Entity):
+class Boss(CombatEntity):
     def __init__(self, name: str, position: tuple, window):
         super().__init__(name, position)
         self.window = window
@@ -21,12 +22,11 @@ class Boss(Entity):
         if self.move_cooldown <= 0:
             # Novo destino aleatório dentro da tela
             self.target_pos = [
-                random.randint(WIN_WIDTH // 2, WIN_WIDTH - 60),
-                random.randint(30, WIN_HEIGHT - 30)
+                random.randint(self.window.get_width() // 2, self.window.get_width() - 60),
+                random.randint(30, self.window.get_height() - 30)
             ]
-            self.move_cooldown = 60  # frames até trocar de novo
+            self.move_cooldown = 60
 
-        # Movimento suave
         dx = self.target_pos[0] - self.rect.centerx
         dy = self.target_pos[1] - self.rect.centery
         if abs(dx) > 2:
@@ -38,8 +38,6 @@ class Boss(Entity):
         self.shot_delay -= 1
         if self.shot_delay <= 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
-
-            # Som de tiro do Boss
             try:
                 sound = pygame.mixer.Sound("./asset/BossShot.mp3")
                 sound.set_volume(0.5)
@@ -49,3 +47,11 @@ class Boss(Entity):
 
             return EnemyShot(name=f"{self.name}Shot", position=(self.rect.centerx, self.rect.centery))
         return None
+
+    def draw(self, surface):
+        offset = math.sin(pygame.time.get_ticks() * 0.004) * 2
+        angle = math.sin(pygame.time.get_ticks() * 0.0025) * 4
+        rotated = pygame.transform.rotate(self.image, angle)
+
+        rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
+        surface.blit(rotated, rect)

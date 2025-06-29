@@ -1,6 +1,8 @@
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
+
+from code.assetmanager import AssetManager
 from code.eventcontroller import EventController
 from code.settings import RESOLUTIONS, RES_INDEX, FULLSCREEN, set_resolution, toggle_fullscreen, apply_resolution
 from code.const import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
@@ -11,8 +13,6 @@ class SettingsMenu:
         self.window = window
         self.options = ["Tela", "Controles", "Voltar"]
         self.option_index = 0
-        self.font_title = "./asset/PressStart2P-Regular.ttf"
-        self.font_text = "./asset/VT323-Regular.ttf"
         self.audio = audio_controller
 
     def run(self):
@@ -122,8 +122,8 @@ class SettingsMenu:
                     waiting = False
 
     def draw_text(self, size, text, color, center, is_title=False):
-        font_path = self.font_title if is_title else self.font_text
-        font = pygame.font.Font(font_path, size)
+        font_name = "PressStart2P-Regular.ttf" if is_title else "VT323-Regular.ttf"
+        font = AssetManager.get_font(font_name, size)
         surf = font.render(text, True, color).convert_alpha()
         rect = surf.get_rect(center=center)
         self.window.blit(surf, rect)

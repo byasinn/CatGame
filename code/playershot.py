@@ -1,8 +1,9 @@
 from code.const import ENTITY_SPEED
-from code.entity import Entity
+from code.DrawableEntity.drawableentity import DrawableEntity
 from code.particle import Particle
+from code.CombatEntity.combatentity import CombatEntity
 
-class PlayerShot(Entity):
+class PlayerShot(CombatEntity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
         self.particles: list[Particle] = []
