@@ -7,16 +7,17 @@ from code.const import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 
 class SettingsMenu:
-    def __init__(self, window):
+    def __init__(self, window, audio_controller):
         self.window = window
         self.options = ["Tela", "Controles", "Voltar"]
         self.option_index = 0
         self.font_title = "./asset/PressStart2P-Regular.ttf"
         self.font_text = "./asset/VT323-Regular.ttf"
+        self.audio = audio_controller
 
     def run(self):
-        pygame.mixer_music.load('./asset/Menu.mp3')
-        pygame.mixer_music.play(-1)
+        if self.audio.current_music != "menu":
+            self.audio.play_music("menu")
 
         running = True
         while running:

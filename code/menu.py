@@ -4,13 +4,14 @@ import math
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
-
+from code.audiocontroller import AudioController
 from code.const import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 
 class Menu:
-    def __init__(self, window):
+    def __init__(self, window, audio_controller):
         self.window = window
+        self.audio = audio_controller
         raw_bg = pygame.image.load("./asset/MenuBg.png").convert()
         self.surf = pygame.transform.scale(raw_bg, self.window.get_size())
         self.rect = self.surf.get_rect(left=0, top=0)
@@ -22,8 +23,8 @@ class Menu:
 
     def run(self, ):
         menu_option = 0
-        pygame.mixer_music.load('./asset/Menu.mp3')
-        pygame.mixer_music.play(-1)
+        if self.audio.current_music != "menu":
+            self.audio.play_music("menu")
 
         img_scaled = pygame.transform.scale(self.surf, self.window.get_size())
         self.window.blit(source=img_scaled, dest=self.rect)
@@ -52,17 +53,55 @@ class Menu:
                             menu_option += 1
                         else:
                             menu_option = 0
-                        self.play_sound("./asset/MenuMove.wav")
+                        self.audio.play_sound("menu_move")
                     if event.key == pygame.K_UP:
                         if menu_option > 0:
                             menu_option -= 1
                         else:
                             menu_option = len(MENU_OPTION) - 1
-                        self.play_sound("./asset/MenuMove.wav")
+                        self.audio.play_sound("menu_move")
 
                     if event.key == pygame.K_RETURN:
-                        self.play_sound("./asset/MenuSelect.wav")
+                        self.audio.play_sound("menu_select")
                         return MENU_OPTION[menu_option]
+
+    def select_mode(self):
+        return self.run_options(["CAMPANHA", "ARCADE"], "Tipo de Jogo")
+
+    def select_campaign_mode(self):
+        return self.run_options(["SOLO", "COOPERATIVO"], "Campanha")
+
+    def select_arcade_mode(self):
+        return self.run_options(["SOLO", "COMPETITIVO"], "Arcade")
+
+    def run_options(self, options, title):
+        selected = 0
+        while True:
+            self.window.blit(self.surf, self.rect)
+            self.menu_text(40, title, COLOR_PINK, (self.window.get_width() // 2, 70), True)
+
+            for i, opt in enumerate(options):
+                color = COLOR_YELLOW if i == selected else COLOR_WHITE
+                self.menu_text(24, opt, color, (self.window.get_width() // 2, 150 + i * 40), False)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected = (selected - 1) % len(options)
+                        self.audio.play_sound("menu_move")
+                    elif event.key == pygame.K_DOWN:
+                        selected = (selected + 1) % len(options)
+                        self.audio.play_sound("menu_move")
+                    elif event.key == pygame.K_RETURN:
+                        self.audio.play_sound("menu_select")
+                        return options[selected]
+                    elif event.key == pygame.K_ESCAPE:
+                        return "BACK"
 
     def draw_cats(self):
         offset = math.sin(pygame.time.get_ticks() * 0.005) * 2  # animação vertical
@@ -87,11 +126,3 @@ class Menu:
         self.window.blit(source=text_surf, dest=text_rect)
 
         self.draw_cats()
-
-    def play_sound(self, path: str, volume: float = 0.5):
-        try:
-            sound = pygame.mixer.Sound(path)
-            sound.set_volume(volume)
-            sound.play()
-        except Exception as e:
-            print(f"[Erro ao tocar som do menu: {path}] {e}")

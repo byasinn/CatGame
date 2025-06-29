@@ -44,6 +44,15 @@ class EntityFactory:
                     list_bg.extend([bg_left, bg_right])
                 list_bg.append(BackgroundLight("LightOverlay_Level2", (0, 0)))
                 return list_bg
+            case "LevelArcadeBg":
+                width = pygame.display.get_surface().get_width()
+                list_bg = []
+                for i in range(4):
+                    bg_left = Background(f'Level1Bg{i}', (0, 0))
+                    bg_right = Background(f'Level1Bg{i}', (width, 0))
+                    list_bg.extend([bg_left, bg_right])
+                list_bg.append(BackgroundLight("LightOverlay_Level1", (0, 0)))
+                return list_bg
             case "Player1":
                 return Player("Player1", (10, surface.get_height() / 2 - 30), surface)
             case "Player2":

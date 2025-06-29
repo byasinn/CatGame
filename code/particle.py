@@ -79,6 +79,32 @@ class MagicFogParticle:
         pygame.draw.circle(fog, (*self.color, self.alpha), (radius, radius), radius)
         surface.blit(fog, (self.x, self.y))
 
+class AuraBurstParticle:
+    def __init__(self, position, color=(255, 255, 255)):
+        self.pos = position
+        self.radius = 20
+        self.max_radius = 80
+        self.color = color
+        self.alpha = 255
+        self.lifetime = 20
+
+    def update(self):
+        self.radius += 5
+        self.alpha = max(0, self.alpha - 20)
+        self.lifetime -= 1
+
+    def draw(self, surface):
+        if self.lifetime > 0 and self.alpha > 0:
+            glow = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
+            pygame.draw.circle(
+                glow,
+                (*self.color, int(self.alpha)),
+                (self.radius, self.radius),
+                self.radius,
+                width=3
+            )
+            surface.blit(glow, (self.pos[0] - self.radius, self.pos[1] - self.radius))
+
 
 
 class ImpactParticle:

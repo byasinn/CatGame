@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import pygame
-
 from code.const import  ENTITY_SPEED, PLAYER_KEY_UP, PLAYER_KEY_DOWN, PLAYER_KEY_LEFT, \
     PLAYER_KEY_RIGHT, PLAYER_KEY_SHOOT, ENTITY_SHOT_DELAY
 from code.entity import Entity
@@ -14,6 +13,8 @@ class Player(Entity):
         self.window = window
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.damage_flash_timer = 0
+        self.damage_counter = 0
+        self.damage_timer = 0
 
     def move(self, ):
         pressed_key = pygame.key.get_pressed()
@@ -49,4 +50,8 @@ class Player(Entity):
         return None
 
     def take_damage_flash(self):
-        self.damage_flash_timer = 10  # quantos frames ele vai piscar vermelho
+        self.damage_flash_timer = 10
+        from code.particle import AuraBurstParticle
+        if hasattr(self, "window"):
+            if hasattr(self, "particles"):
+                self.particles.append(AuraBurstParticle(self.rect.center))

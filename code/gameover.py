@@ -72,3 +72,4 @@ class GameOver:
         text_scaled = pygame.transform.rotozoom(self.text, 0, scale)
         rect = text_scaled.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2 + offset_text_y))
         self.window.blit(text_scaled, rect)
+

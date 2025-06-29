@@ -1,3 +1,5 @@
+import random
+
 import pygame
 from code.const import EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_STEP, TIMEOUT_LEVEL
 
@@ -7,6 +9,7 @@ class TimerController:
         self.timeout = TIMEOUT_LEVEL
         self.level_name = level_name
         self.boss_summoned = False
+
 
         # Inicia os timers do pygame
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
@@ -41,3 +44,35 @@ class TimerController:
 
     def has_boss(self):
         return self.boss_summoned
+
+class ArcadeTimerController:
+
+    def __init__(self):
+        self.spawn_timer = 3000
+        self.speed_increment_timer = 10000
+        self.last_spawn = pygame.time.get_ticks()
+        self.last_speedup = pygame.time.get_ticks()
+        self.difficulty_level = 1
+        self.max_difficulty = 5
+
+    def update(self, event_list, entity_list, entity_factory):
+        now = pygame.time.get_ticks()
+
+        if now - self.last_spawn > self.spawn_timer:
+            self.last_spawn = now
+            entity_list.append(entity_factory.get_entity(random.choice(["Enemy1", "Enemy2"])))
+
+        if now - self.last_speedup > self.speed_increment_timer:
+            self.last_speedup = now
+            self.difficulty_level = min(self.difficulty_level + 1, self.max_difficulty)
+
+        # exemplo: aumentar a velocidade global
+        from code.const import ENTITY_SPEED
+        for name in ["Enemy1", "Enemy2"]:
+            ENTITY_SPEED[name] = min(ENTITY_SPEED[name] + 1, 6)
+
+    def get_timeout(self):
+        return 99999
+
+    def has_boss(self):
+        return False  # nunca terá boss no arcade

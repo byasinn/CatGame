@@ -5,7 +5,9 @@ from code.enemyshot import EnemyShot
 from code.entity import Entity
 from code.player import Player
 from code.playershot import PlayerShot
-from code.particle import ImpactParticle
+from code.particle import ImpactParticle, AuraBurstParticle
+
+
 class EntityMediator:
 
     @staticmethod
@@ -65,8 +67,21 @@ class EntityMediator:
                 # Flash de dano nos jogadores
                 if isinstance(ent1, Player):
                     ent1.take_damage_flash()
+                    ent1.damage_counter += 1
+                    ent1.damage_timer = 30
+
+                    if ent1.damage_counter >= 3:
+                        entity_manager.particles_impact.append(AuraBurstParticle(ent1.rect.center))
+                        ent1.damage_counter = 0
+
                 if isinstance(ent2, Player):
                     ent2.take_damage_flash()
+                    ent2.damage_counter += 1
+                    ent2.damage_timer = 30
+
+                    if ent2.damage_counter >= 3:
+                        entity_manager.particles_impact.append(AuraBurstParticle(ent2.rect.center))
+                        ent2.damage_counter = 0
 
     @staticmethod
     def __give_score(enemy: Entity, entity_list: list[Entity]):

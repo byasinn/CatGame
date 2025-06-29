@@ -12,16 +12,18 @@ from code.entitymanager import EntityManager
 from code.entity import Entity
 from code.entityFactory import EntityFactory
 from code.hud import HUDRenderer
-from code.timercontroller import TimerController
+from code.timercontroller import TimerController, ArcadeTimerController
 from code.eventcontroller import EventController
 
 class Level:
-    def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int]):
+    def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int], is_arcade=False, audio=None):
+
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []
-        self.entity_list.extend(EntityFactory.get_entity(self.name + "Bg"))
+        self.is_arcade = is_arcade
+        self.audio = audio
 
         # Criar jogadores
         player = EntityFactory.get_entity('Player1')
@@ -33,17 +35,32 @@ class Level:
             player.score = player_score[1]
             self.entity_list.append(player)
 
+        if self.is_arcade:
+            self.entity_list.extend(EntityFactory.get_entity("Level1Bg"))
+            self.timer = ArcadeTimerController()
+        else:
+            self.entity_list.extend(EntityFactory.get_entity(self.name + "Bg"))
+            self.timer = TimerController(self.name)
+
         # Componentes do jogo
         self.entity_manager = EntityManager(self.entity_list, self.window)
         self.event_controller = EventController(self.entity_manager, EntityFactory)
         self.hud = HUDRenderer(self.window)
         self.timer = TimerController(self.name)
 
-        self.game_mode_str = {
-            MENU_OPTION[0]: "Solo",
-            MENU_OPTION[1]: "Coop",
-            MENU_OPTION[2]: "Versus",
-        }[game_mode]
+        if "COMPETITIVE" in game_mode:
+            self.game_mode_str = "Competitivo"
+        elif "COOPERATIVE" in game_mode:
+            self.game_mode_str = "Cooperativo"
+        else:
+            self.game_mode_str = "Solo"
+
+        if is_arcade:
+            self.arcade_mode = True
+            self.timer = ArcadeTimerController()
+        else:
+            self.arcade_mode = False
+            self.timer = TimerController(self.name)
 
         if self.name == "Level1":
             self.sunlight = pygame.image.load("./asset/LightOverlay_Level1.png").convert_alpha()
@@ -56,8 +73,14 @@ class Level:
 
 
     def run(self, player_score: list[int]):
-        pygame.mixer_music.load(f'./asset/{self.name}.mp3')
-        pygame.mixer_music.play(-1)
+
+        if self.is_arcade:
+            self.audio.play_music("arcade")
+        else:
+            level_name = self.name.lower()
+            if level_name in ["level1", "level2", "level3"]:
+                self.audio.play_music(level_name)
+
         clock = pygame.time.Clock()
         self.entity_manager.enable_ambient_particles = True
         self.entity_manager.enable_magic_fog = True

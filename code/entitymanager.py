@@ -22,10 +22,17 @@ class EntityManager:
     def update_entities(self):
         for ent in self.entity_list:
             ent.move()
+
             if isinstance(ent, (Player, Enemy)) or ent.name == "Boss":
                 shot = ent.shoot()
                 if shot:
                     self.entity_list.append(shot)
+
+            if isinstance(ent, Player):
+                if ent.damage_timer > 0:
+                    ent.damage_timer -= 1
+                else:
+                    ent.damage_counter = 0
 
     def draw_backgrounds(self):
         # 1. Desenha todos os backgrounds normais
@@ -50,8 +57,15 @@ class EntityManager:
 
                 if ent.damage_flash_timer > 0:
                     ent.damage_flash_timer -= 1
+
+                    mask = pygame.mask.from_surface(surf)
                     red_overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
-                    red_overlay.fill((255, 0, 0, 120))
+
+                    for x in range(surf.get_width()):
+                        for y in range(surf.get_height()):
+                            if mask.get_at((x, y)):
+                                red_overlay.set_at((x, y), (255, 0, 0, 120))
+
                     surf.blit(red_overlay, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
 
                 rect = surf.get_rect(center=(ent.rect.centerx, ent.rect.centery + offset))
