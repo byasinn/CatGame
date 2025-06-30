@@ -1,5 +1,5 @@
 from code.DrawableEntity.drawableentity import DrawableEntity
-from code.const import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
+from code.system.config import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
 
 class CombatEntity(DrawableEntity):
     def __init__(self, name: str, position: tuple):

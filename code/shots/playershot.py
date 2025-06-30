@@ -1,6 +1,5 @@
-from code.const import ENTITY_SPEED
-from code.DrawableEntity.drawableentity import DrawableEntity
-from code.particle import Particle
+from code.system.config import ENTITY_SPEED
+from code.system.particle import Particle
 from code.CombatEntity.combatentity import CombatEntity
 
 class PlayerShot(CombatEntity):

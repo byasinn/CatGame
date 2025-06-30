@@ -1,4 +1,4 @@
-from code.const import ENTITY_SPEED
+from code.system.config import ENTITY_SPEED
 from code.CombatEntity.combatentity import CombatEntity
 
 

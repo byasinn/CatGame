@@ -1,6 +1,6 @@
 import pygame
 from code.settings.settingsmanager import SettingsManager
-from code.const import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 # Lista de resoluções disponíveis
 RESOLUTIONS = [

@@ -5,10 +5,10 @@ import math
 import pygame
 from pygame import Surface
 
-from code.assetmanager import AssetManager
-from code.audiocontroller import AudioController
-from code.const import WIN_WIDTH, WIN_HEIGHT
-from code.entityFactory import EntityFactory
+from code.system.assetmanager import AssetManager
+from code.system.audiocontroller import AudioController
+from code.system.config import WIN_WIDTH, WIN_HEIGHT
+from code.factory.entityFactory import EntityFactory
 
 class GameOver:
     def __init__(self, window: Surface):

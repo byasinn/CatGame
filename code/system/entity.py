@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 import pygame.image
-from code.const import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
+from code.system.config import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
 from pygame.transform import scale
 
 class Entity(ABC):

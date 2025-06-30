@@ -1,8 +1,8 @@
 import pygame
 from pygame import Surface
-from code.const import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings import display, audio, gameplay, language, controls
-from code.lang import t
+from code.settings.lang import t
 
 class SettingsMenu:
     def __init__(self, window: Surface, audio_controller):

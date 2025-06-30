@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 import sys
 import pygame
+
+from code.core.levels.level1 import Level1_0, Level1
 from code.settings.display import apply_resolution
+from code.system.assetmanager import AssetManager
+from code.core.level import Level  # <- Esse agora é o loader com PHASE_MAP
+from code.core.menu import Menu
+from code.core.score import Score
+from code.core.gameover import GameOver
 from code.settings.settingsmenu import SettingsMenu
-from code.assetmanager import AssetManager
-from code.level import Level
-from code.menu import Menu
-from code.score import Score
-from code.gameover import GameOver
-from code.const import MENU_OPTION
-from code.settings.settingsmenu import SettingsMenu
-from code.audiocontroller import AudioController
-from code.lang import t
+from code.system.audiocontroller import AudioController
+from code.settings.lang import t
+from code.core.levels.scenes import run_scene
 
 class Game:
     def __init__(self):
@@ -52,24 +53,32 @@ class Game:
 
                 if is_arcade:
                     self.fade(fade_in=True)
-                    level = Level(self.window, 'LevelArcade', menu_return, player_score, is_arcade=True, audio=self.audio)
+                    # 🔧 Você pode criar depois: LevelArcade, LevelRush, etc.
+                    level = Level(self.window, 'Level1', menu_return, player_score, is_arcade=True, audio=self.audio)
                     level_return = level.run(player_score)
                     self.fade(fade_in=False)
 
                     GameOver(self.window).show()
                     continue
 
-                # 🔐 A PARTIR DAQUI: CAMPANHA
-                self.show_intro_dialogue(menu_return, phase=1)
+                # CAMPANHA
+                run_scene(self.window, "cutscene1", 3)
+
                 self.fade(fade_in=True)
-                level = Level(self.window, 'Level1', menu_return, player_score, audio=self.audio)
-                level_return = level.run(player_score)
+
+                # Tutorial jogável
+                tutorial = Level1_0(self.window, menu_return, player_score, audio=self.audio)
+                if tutorial.run(player_score):
+                    level1 = Level1(self.window, menu_return, player_score, audio=self.audio)
+                    level_return = level1.run(player_score)
+
                 self.fade(fade_in=False)
+
                 if not level_return:
                     GameOver(self.window).show()
                     continue
 
-                self.show_intro_dialogue(menu_return, phase=2)
+                run_scene(self.window, "cutscene2", 3)
                 self.fade(fade_in=True)
                 level = Level(self.window, 'Level2', menu_return, player_score, audio=self.audio)
                 level_return = level.run(player_score)
@@ -78,15 +87,14 @@ class Game:
                     GameOver(self.window).show()
                     continue
 
-                self.show_intro_dialogue(menu_return, phase=3)
+                run_scene(self.window, "cutscene3", 3)
                 self.fade(fade_in=True)
                 level = Level(self.window, 'Level3', menu_return, player_score, audio=self.audio)
-                self.fade(fade_in=False)
                 level_return = level.run(player_score)
+                self.fade(fade_in=False)
                 if not level_return:
                     GameOver(self.window).show()
                     continue
-
                 score.save(menu_return, player_score)
 
             elif menu_return == "SCORE":
@@ -129,17 +137,12 @@ class Game:
             clock.tick(60)
 
     def show_intro_dialogue(self, game_mode, phase=1):
-
-        # Gatinhos
         leon = AssetManager.get_image(f"LeonMenu{'' if phase == 1 else phase}.png")
         mora = AssetManager.get_image(f"MoraMenu{'' if phase == 1 else phase}.png")
         leon_rect = leon.get_rect(bottomleft=(50, self.window.get_height() - 30))
         mora_rect = mora.get_rect(bottomright=(self.window.get_width() - 50, self.window.get_height() - 30))
 
-        # Fonte
         font = AssetManager.get_font("VT323-Regular.ttf", 22)
-
-        # Diálogos
         dialogues = [t(f"cutscene{phase}_{i + 1}") for i in range(3)]
 
         current = 0
@@ -149,7 +152,6 @@ class Game:
             self.window.blit(leon, leon_rect)
             self.window.blit(mora, mora_rect)
 
-            # Renderizar texto atual
             text = font.render(dialogues[current], True, (255, 255, 255))
             text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
             self.window.blit(text, text_rect)
@@ -164,7 +166,7 @@ class Game:
                     if current < len(dialogues) - 1:
                         current += 1
                     else:
-                        return  # termina o diálogo e vai pro jogo
+                        return
 
     def fade(self, fade_in=True, speed=10):
         fade_surface = pygame.Surface(self.window.get_size()).convert()

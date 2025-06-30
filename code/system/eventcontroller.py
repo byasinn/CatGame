@@ -1,7 +1,7 @@
 import random
 import sys
 import pygame
-from code.const import EVENT_ENEMY
+from code.system.config import EVENT_ENEMY
 
 
 class EventController:

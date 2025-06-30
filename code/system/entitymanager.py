@@ -1,11 +1,11 @@
 import math
 import pygame
-from code.entity import Entity
-from code.particle import AmbientFloatParticle, MagicFogParticle
+from code.system.entity import Entity
+from code.system.particle import AmbientFloatParticle, MagicFogParticle
 from code.CombatEntity.player import Player
 from code.CombatEntity.enemy import Enemy
-from code.background import Background
-from code.entitymediator import EntityMediator
+from code.DrawableEntity.MovingEntity.background import Background
+from code.system.entitymediator import EntityMediator
 
 class EntityManager:
     def __init__(self, entity_list: list[Entity], window: pygame.Surface):
@@ -85,6 +85,9 @@ class EntityManager:
     def add_entity(self, entity):
         self.entity_list.append(entity)
 
+    def has_entity_named(self, name: str) -> bool:
+        return any(entity.name == name for entity in self.get_entities())
+
     def update_visual_effects(self):
         # Partículas flutuantes
         if self.enable_ambient_particles:
@@ -107,3 +110,12 @@ class EntityManager:
             p.update()
             if p.lifetime <= 0:
                 self.particles_impact.remove(p)
+
+    def update_selected_entities(self, allowed_names: list[str]):
+        for entity in self.entity_list:
+            if (
+                    (entity.name in allowed_names or entity.name.endswith("Shot") or entity.name.startswith("Level1Bg"))
+                    and hasattr(entity, 'update')
+            ):
+                entity.update()
+

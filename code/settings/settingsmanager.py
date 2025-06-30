@@ -15,6 +15,7 @@ class SettingsManager:
     _settings = DEFAULTS.copy()
     _path = "./settings.json"
 
+
     @classmethod
     def load(cls):
         if os.path.exists(cls._path):
@@ -39,3 +40,4 @@ class SettingsManager:
     def set(cls, key, value):
         cls._settings[key] = value
         cls.save()
+

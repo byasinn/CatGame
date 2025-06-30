@@ -3,8 +3,8 @@
 import math
 import random
 import pygame
-from code.const import ENTITY_SPEED, ENTITY_SHOT_DELAY
-from code.enemyshot import EnemyShot
+from code.system.config import ENTITY_SPEED, ENTITY_SHOT_DELAY
+from code.shots.enemyshot import EnemyShot
 from code.CombatEntity.combatentity import CombatEntity
 
 class Enemy(CombatEntity):
@@ -17,6 +17,9 @@ class Enemy(CombatEntity):
             self.zigzag_direction = 0
 
     def move(self):
+        if getattr(self, 'frozen', False):
+            return
+
         self.rect.centerx -= ENTITY_SPEED[self.name]
 
         if self.name == "Enemy2":
@@ -33,6 +36,9 @@ class Enemy(CombatEntity):
                     self.zigzag_direction = 0
 
     def shoot(self):
+        if getattr(self, 'frozen', False):
+            return None
+
         self.shot_delay -= 1
         if self.shot_delay <= 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]

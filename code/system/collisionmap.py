@@ -1,9 +1,9 @@
 from code.CombatEntity.player import Player
-from code.playershot import PlayerShot
+from code.shots.playershot import PlayerShot
 from code.CombatEntity.enemy import Enemy
-from code.enemyshot import EnemyShot
+from code.shots.enemyshot import EnemyShot
 from code.CombatEntity.boss import Boss
-from code.particle import ImpactParticle, AuraBurstParticle
+from code.system.particle import ImpactParticle, AuraBurstParticle
 
 class CollisionMap:
     RULES = {}

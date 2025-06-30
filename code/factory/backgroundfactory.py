@@ -1,5 +1,5 @@
 import pygame
-from code.background import Background
+from code.DrawableEntity.MovingEntity.background import Background
 from code.DrawableEntity.StaticEntity.backgroundlight import BackgroundLight
 
 class BackgroundFactory:

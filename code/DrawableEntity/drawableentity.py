@@ -1,10 +1,9 @@
 import pygame
-from code.entitybase import Entity
-from code.const import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
+from code.system.entity import Entity
 
 class DrawableEntity(Entity):
     def __init__(self, name: str, position: tuple):
-        super().__init__(name)
+        super().__init__(name, position)
         self.image = pygame.image.load(f'./asset/{name}.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=position)
 

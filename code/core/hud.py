@@ -1,8 +1,8 @@
 import math
 import pygame
 from pygame import Surface
-from code.const import COLOR_WHITE, COLOR_PINK, COLOR_YELLOW
-from code.assetmanager import AssetManager
+from code.system.config import COLOR_WHITE, COLOR_PINK, COLOR_YELLOW
+from code.system.assetmanager import AssetManager
 
 class HUDRenderer:
     def __init__(self, window: Surface):
@@ -107,3 +107,20 @@ class HUDRenderer:
                 img_key = f"{name}Competitive"
                 is_winner = i == higher and score > 0
                 draw_icon_score(img_key, score, x_base, y_base + i * 35, highlight=is_winner, animate=is_winner)
+
+    def draw_tutorial_message(self, surface, text: str, darken: bool = True, blink: bool = True):
+        if darken:
+            overlay = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 150))
+            surface.blit(overlay, (0, 0))
+
+        if blink:
+            alpha = int(255 * abs(math.sin(pygame.time.get_ticks() * 0.002)))
+        else:
+            alpha = 255
+
+        font = pygame.font.Font("./asset/PressStart2P-Regular.ttf", 16)
+        msg_surface = font.render(text, True, (255, 255, 255))
+        msg_surface.set_alpha(alpha)
+        rect = msg_surface.get_rect(center=(surface.get_width() // 2, surface.get_height() // 4))
+        surface.blit(msg_surface, rect)

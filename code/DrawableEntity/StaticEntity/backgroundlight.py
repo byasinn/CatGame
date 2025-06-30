@@ -1,5 +1,5 @@
 import pygame
-from code.entity import Entity
+from code.system.entity import Entity
 
 class BackgroundLight(Entity):
     def __init__(self, name: str, position: tuple):

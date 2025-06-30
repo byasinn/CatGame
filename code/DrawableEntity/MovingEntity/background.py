@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import pygame
-from code.const import ENTITY_SPEED
-from code.entity import Entity
+from code.system.config import ENTITY_SPEED
+from code.system.entity import Entity
 
 
 class Background(Entity):

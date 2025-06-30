@@ -1,7 +1,7 @@
 import pygame
-from code.const import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings.settingsmanager import SettingsManager
-from code.audiocontroller import AudioController
+from code.system.audiocontroller import AudioController
 
 def run(window):
     audio = AudioController()

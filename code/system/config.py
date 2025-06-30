@@ -27,6 +27,7 @@ ENTITY_SPEED = {
     "Enemy1Shot": 5,
     "Enemy2": 2,
     "Enemy2Shot": 3,
+    "EnemyTest": 2,
 
     'Level2Bg0': 0,
     'Level2Bg1': 1,
@@ -67,6 +68,7 @@ ENTITY_HEALTH = {
     "Enemy1Shot": 1,
     "Enemy2": 60,
     "Enemy2Shot": 1,
+    "EnemyTest": 5,
 
     'Level2Bg0': 999,
     'Level2Bg1': 999,
@@ -107,6 +109,7 @@ ENTITY_DAMAGE = {
     "Enemy1Shot": 20,
     "Enemy2": 1,
     "Enemy2Shot": 20,
+    "EnemyTest": 0,
 
     'Level2Bg0': 0,
     'Level2Bg1': 0,
@@ -146,6 +149,7 @@ ENTITY_SCORE = {
     "Enemy1Shot": 0,
     "Enemy2": 125,
     "Enemy2Shot": 0,
+    "EnemyTest": 0,
 
     'Level2Bg0': 0,
     'Level2Bg1': 0,
@@ -174,6 +178,7 @@ ENTITY_SHOT_DELAY = {
     'Player2': 20,
     "Enemy1": 20,
     'Enemy2': 20,
+    "EnemyTest": 100,
 
     'Boss': 40,
 }

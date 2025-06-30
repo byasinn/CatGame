@@ -3,7 +3,7 @@
   "fullscreen": false,
   "music_volume": 0.6,
   "sfx_volume": 0.8,
-  "language": "en",
-  "visual_effects": true,
-  "gore": true
+  "language": "pt",
+  "visual_effects": false,
+  "gore": false
 }

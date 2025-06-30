@@ -1,12 +1,10 @@
 import random
 import pygame
 from code.CombatEntity.enemy import Enemy
-from code.collisionmap import CollisionMap
-from code.enemyshot import EnemyShot
-from code.entity import Entity
-from code.CombatEntity.player import Player
-from code.playershot import PlayerShot
-from code.particle import AuraBurstParticle
+from code.system.collisionmap import CollisionMap
+from code.shots.enemyshot import EnemyShot
+from code.system.entity import Entity
+from code.shots.playershot import PlayerShot
 from code.settings.settingsmanager import SettingsManager
 
 
@@ -82,7 +80,7 @@ class EntityMediator:
 
     @staticmethod
     def _spawn_blood(entity_manager, position, count=3):
-        from code.particle import ImpactParticle
+        from code.system.particle import ImpactParticle
 
         if not SettingsManager.get("gore"):
             return

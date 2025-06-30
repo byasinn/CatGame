@@ -5,10 +5,9 @@ import sys
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
-from code.lang import t
-from code.assetmanager import AssetManager
-from code.audiocontroller import AudioController
-from code.const import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.settings.lang import t
+from code.system.assetmanager import AssetManager
+from code.system.config import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 
 class Menu:

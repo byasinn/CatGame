@@ -3,11 +3,11 @@
 import math
 
 import pygame
-from code.const import ENTITY_SPEED, PLAYER_KEY_UP, PLAYER_KEY_DOWN, PLAYER_KEY_LEFT, \
+from code.system.config import ENTITY_SPEED, PLAYER_KEY_UP, PLAYER_KEY_DOWN, PLAYER_KEY_LEFT, \
     PLAYER_KEY_RIGHT, PLAYER_KEY_SHOOT, ENTITY_SHOT_DELAY
-from code.playershot import PlayerShot
+from code.shots.playershot import PlayerShot
 from code.CombatEntity.combatentity import CombatEntity
-from code.particle import AuraBurstParticle
+from code.system.particle import AuraBurstParticle
 
 class Player(CombatEntity):
     def __init__(self, name: str, position: tuple, window):
@@ -17,6 +17,7 @@ class Player(CombatEntity):
         self.damage_flash_timer = 0
         self.damage_counter = 0
         self.damage_timer = 0
+        self.shot_fired = False
 
     def move(self):
         pressed_key = pygame.key.get_pressed()
@@ -31,17 +32,26 @@ class Player(CombatEntity):
 
     def shoot(self):
         pressed_key = pygame.key.get_pressed()
+
+        # Diminui o delay de tiro
         if self.shot_delay > 0:
             self.shot_delay -= 1
+
+        # Verifica se pode atirar
         if pressed_key[PLAYER_KEY_SHOOT[self.name]] and self.shot_delay == 0:
+            self.shot_fired = True  # <<< Flag que o tutorial usa
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+
             try:
                 sound = pygame.mixer.Sound(f"./asset/{self.name}Shot.mp3")
                 sound.set_volume(0.5)
                 sound.play()
             except Exception as e:
                 print(f"[Erro ao tocar som de tiro] {e}")
+
             return PlayerShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
+
+        self.shot_fired = False  # <<< Zera a flag se não atirou
         return None
 
     def take_damage_flash(self):
@@ -69,4 +79,18 @@ class Player(CombatEntity):
 
         rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
         surface.blit(rotated, rect)
+
+    def update(self):
+        self.move()
+
+        shot = self.shoot()
+        if shot:
+            if hasattr(self, "particles"):
+                self.particles.append(shot)
+            elif hasattr(self, "entity_manager"):
+                self.entity_manager.add_entity(shot)
+
+        # Se não atirou neste frame, zera a flag (importante para o tutorial)
+        if not shot:
+            self.shot_fired = False
 

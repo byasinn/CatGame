@@ -1,7 +1,7 @@
 import random
 
 import pygame
-from code.const import EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_STEP, TIMEOUT_LEVEL
+from code.system.config import EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_STEP, TIMEOUT_LEVEL
 
 
 class TimerController:
@@ -67,7 +67,7 @@ class ArcadeTimerController:
             self.difficulty_level = min(self.difficulty_level + 1, self.max_difficulty)
 
         # exemplo: aumentar a velocidade global
-        from code.const import ENTITY_SPEED
+        from code.system.config import ENTITY_SPEED
         for name in ["Enemy1", "Enemy2"]:
             ENTITY_SPEED[name] = min(ENTITY_SPEED[name] + 1, 6)
 

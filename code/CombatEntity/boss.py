@@ -1,9 +1,8 @@
 import math
-
 import pygame
 import random
-from code.const import ENTITY_SHOT_DELAY, ENTITY_SPEED
-from code.enemyshot import EnemyShot
+from code.system.config import ENTITY_SHOT_DELAY, ENTITY_SPEED
+from code.shots.enemyshot import EnemyShot
 from code.CombatEntity.combatentity import CombatEntity
 
 class Boss(CombatEntity):
