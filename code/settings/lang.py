@@ -60,16 +60,23 @@ LANG_DICT = {
         "score_player1_enter": "Player 1, digite seu nome",
         "score_player2_enter": "Player 2, digite seu nome",
 
-        # Cutscene
-        "cutscene1_1": "Leon: Miau, parece que vamos ter um dia cheio!",
-        "cutscene1_2": "Mora: Cuidado com os inimigos, viu? Eu confio em você ♥",
-        "cutscene1_3": "Pressione ENTER para começar!",
-        "cutscene2_1": "Mora: Ufa, essa foi difícil!",
-        "cutscene2_2": "Leon: A próxima fase vai ser ainda mais intensa, miaaau!",
-        "cutscene2_3": "Preparadx? Aperte ENTER!",
-        "cutscene3_1": "Leon: É agora, o último desafio!",
-        "cutscene3_2": "Mora: Mostre que você é uma verdadeira lenda felina!",
-        "cutscene3_3": "Aperte ENTER e brilhe!",
+        # Scene
+            "scenes1": [
+                    "Leon: Miau, parece que vamos ter um dia cheio!",
+                    "Mora: Cuidado com os inimigos, viu? Eu confio em você ♥",
+                    "Pressione ENTER para começar!"
+        ],
+            "scenes2": [
+                    "Mora: Ufa, essa foi difícil!",
+                    "Leon: A próxima fase vai ser ainda mais intensa, miaaau!",
+                    "Preparadx? Aperte ENTER!"
+        ],
+            "scenes3": [
+                    "Leon: É agora, o último desafio!",
+                    "Mora: Mostre que você é uma verdadeira lenda felina!",
+                    "Aperte ENTER e brilhe!"
+        ],
+
     },
 
     "en": {
@@ -131,19 +138,28 @@ LANG_DICT = {
         "score_player1_enter": "Player 1, enter your name",
         "score_player2_enter": "Player 2, enter your name",
 
-        # Cutscene
-        "cutscene1_1": "Leon: Meow, looks like we have a busy day ahead!",
-        "cutscene1_2": "Mora: Watch out for enemies, okay? I trust you ♥",
-        "cutscene1_3": "Press ENTER to start!",
-        "cutscene2_1": "Mora: Whew, that was tough!",
-        "cutscene2_2": "Leon: Next level will be even more intense, meooow!",
-        "cutscene2_3": "Ready? Press ENTER!",
-        "cutscene3_1": "Leon: This is it, the final challenge!",
-        "cutscene3_2": "Mora: Show them you're a true feline legend!",
-        "cutscene3_3": "Press ENTER and shine!",
+        # Scene
+            "scenes1": [
+                    "Leon: Meow, looks like we have a busy day ahead!",
+                    "Mora: Watch out for enemies, okay? I trust you ♥",
+                    "Press ENTER to start!"
+        ],
+            "scenes2": [
+                    "Mora: Whew, that was tough!",
+                    "Leon: Next level will be even more intense, meooow!",
+                    "Ready? Press ENTER!"
+        ],
+            "scenes3": [
+                    "Leon: This is it, the final challenge!",
+                    "Mora: Show them you're a true feline legend!",
+                    "Press ENTER and shine!"
+        ],
+
     }
 }
 
-def t(key: str) -> str:
+
+def t(key: str):
     lang = SettingsManager.get("language") or "pt"
-    return LANG_DICT.get(lang, LANG_DICT["pt"]).get(key, key)
+    data = LANG_DICT.get(lang, LANG_DICT["pt"]).get(key, key)
+    return data

@@ -46,7 +46,7 @@ class HUDRenderer:
         # Barra de progresso (timeout como "avanço")
         if not (level_name == "Level3" and boss_summoned):
             bar_x, bar_y, bar_w, bar_h = 10, 8, 150, 6
-            percent = max(0, min(1, 1 - (timeout / 30000)))  # inverso: mais cheio = mais próximo do fim
+            percent = max(0, min(1, timeout / 30000))
             filled = int(bar_w * percent)
 
             pygame.draw.rect(self.window, (50, 50, 50), (bar_x, bar_y, bar_w, bar_h), border_radius=3)
@@ -124,3 +124,4 @@ class HUDRenderer:
         msg_surface.set_alpha(alpha)
         rect = msg_surface.get_rect(center=(surface.get_width() // 2, surface.get_height() // 4))
         surface.blit(msg_surface, rect)
+

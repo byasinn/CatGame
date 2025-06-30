@@ -2,18 +2,17 @@
 # -*- coding: utf-8 -*-
 import sys
 import pygame
-
-from code.core.levels.level1 import Level1_0, Level1
+from code.levels.level1.level1_1 import Level1_0
 from code.settings.display import apply_resolution
 from code.system.assetmanager import AssetManager
-from code.core.level import Level  # <- Esse agora é o loader com PHASE_MAP
+from code.levels.level import Level  # <- Esse agora é o loader com PHASE_MAP
 from code.core.menu import Menu
 from code.core.score import Score
 from code.core.gameover import GameOver
 from code.settings.settingsmenu import SettingsMenu
 from code.system.audiocontroller import AudioController
 from code.settings.lang import t
-from code.core.levels.scenes import run_scene
+from code.levels.level1.cutscenes1 import run_scene
 
 class Game:
     def __init__(self):
@@ -61,41 +60,14 @@ class Game:
                     GameOver(self.window).show()
                     continue
 
-                # CAMPANHA
-                run_scene(self.window, "cutscene1", 3)
-
                 self.fade(fade_in=True)
-
-                # Tutorial jogável
-                tutorial = Level1_0(self.window, menu_return, player_score, audio=self.audio)
-                if tutorial.run(player_score):
-                    level1 = Level1(self.window, menu_return, player_score, audio=self.audio)
-                    level_return = level1.run(player_score)
-
-                self.fade(fade_in=False)
-
-                if not level_return:
-                    GameOver(self.window).show()
-                    continue
-
-                run_scene(self.window, "cutscene2", 3)
-                self.fade(fade_in=True)
-                level = Level(self.window, 'Level2', menu_return, player_score, audio=self.audio)
+                level = Level(self.window, 'Level1', menu_return, player_score, audio=self.audio)
                 level_return = level.run(player_score)
                 self.fade(fade_in=False)
-                if not level_return:
-                    GameOver(self.window).show()
-                    continue
 
-                run_scene(self.window, "cutscene3", 3)
-                self.fade(fade_in=True)
-                level = Level(self.window, 'Level3', menu_return, player_score, audio=self.audio)
-                level_return = level.run(player_score)
-                self.fade(fade_in=False)
                 if not level_return:
                     GameOver(self.window).show()
                     continue
-                score.save(menu_return, player_score)
 
             elif menu_return == "SCORE":
                 score.show()

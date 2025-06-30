@@ -3,18 +3,18 @@
 from pygame import Surface
 
 # Importa as fases da campanha
-from code.core.levels.level1 import Level1
-from code.core.levels.level2 import Level2
-from code.core.levels.level3 import Level3
+from code.levels.level1.level1_1 import Level1_0
+from code.levels.level1.level1_2 import Level1_2
+from code.levels.level2.level2 import Level2
+from code.levels.level3.level3 import Level3
 
 # Mapeia os nomes usados no game.py para suas classes
+
 PHASE_MAP = {
-    "Level1": Level1,
+    "Level1": Level1_0,
+    "Level1_2": Level1_2,
     "Level2": Level2,
     "Level3": Level3,
-    # Se quiser adicionar depois:
-    # "Level1_1": Level1_1,
-    # "Level2_1": Level2_1,
 }
 
 class Level:
@@ -30,7 +30,7 @@ class Level:
 
         if self.is_arcade:
             # Aqui você pode criar um LevelArcade separado futuramente
-            from code.core.levels.level1 import Level1  # Temporário para testes no arcade
+            from code.levels import Level1  # Temporário para testes no arcade
             self.logic = Level1(window, game_mode, player_score, audio)
         else:
             LevelClass = PHASE_MAP.get(name)
@@ -39,4 +39,19 @@ class Level:
             self.logic = LevelClass(window, game_mode, player_score, audio)
 
     def run(self, player_score: list[int]):
-        return self.logic.run(player_score)
+        # CENA DE ABERTURA da campanha (antes de Level1)
+        if self.name == "Level1":
+            from code.levels.level1.cutscenes1 import run_scene
+            run_scene(self.window, "scenes1", 3)
+
+        result = self.logic.run(player_score)
+
+        # Transição de Level1 → cutscene2 → Level1_2
+        if self.name == "Level1" and result:
+            from code.levels.level1.cutscenes1 import run_scene
+            run_scene(self.window, "scenes2", 3)
+
+            next_level = Level(self.window, "Level1_2", self.game_mode, player_score, self.is_arcade, self.audio)
+            return next_level.run(player_score)
+
+        return result
