@@ -17,12 +17,12 @@ SCENE1_DATA = [
     },
     {
         "background": ["Scene1_3Bg"],
-        "characters": [("LeonScene1.png", "left", "fadein")],
+        "characters": [("LeonScene1_1.png", "left", "fadein")],
         "text": "Leon: Que bom!"
     },
     {
         "background": ["Scene1_4Bg"],
-        "characters": [("MoraScene1.png", "right", "fadein")],
+        "characters": [("MoraScene1_1.png", "right", "fadein")],
         "text": "Mora: Vamos lá!"
     },
 ]

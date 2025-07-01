@@ -10,6 +10,7 @@ from code.factory.backgroundfactory import BackgroundFactory
 from code.settings.lang import t
 from code.system.assetmanager import AssetManager
 from code.system.config import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
+from code.system.particle import draw_grain_overlay
 
 
 class Menu:
@@ -41,6 +42,7 @@ class Menu:
             for i in range(len(options)):
                 color = COLOR_YELLOW if i == menu_option else COLOR_WHITE
                 self.menu_text(20, options[i], color, ((self.window.get_width() / 2), 200 + 25 * i))
+            draw_grain_overlay(self.window)
             pygame.display.flip()
 
             # Check for all events
@@ -90,6 +92,7 @@ class Menu:
                 color = COLOR_YELLOW if i == selected else COLOR_WHITE
                 self.menu_text(24, label, color, (self.window.get_width() // 2, 150 + i * 40), False)
 
+            draw_grain_overlay(self.window)
             pygame.display.flip()
 
             for event in pygame.event.get():

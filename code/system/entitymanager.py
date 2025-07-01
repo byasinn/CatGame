@@ -1,7 +1,8 @@
 import math
+import random
 import pygame
 from code.system.entity import Entity
-from code.system.particle import AmbientFloatParticle, MagicFogParticle
+from code.system.particle import AmbientFloatParticle, MagicFogParticle, draw_grain_overlay
 from code.CombatEntity.player import Player
 from code.CombatEntity.enemy import Enemy
 from code.DrawableEntity.MovingEntity.background import Background
@@ -21,7 +22,11 @@ class EntityManager:
 
     def update_entities(self):
         for ent in self.entity_list:
-            ent.move()
+            if hasattr(ent, "update"):
+                ent.update()  # ✅ Chama update do Player, Enemy, etc.
+
+            elif hasattr(ent, "move"):
+                ent.move()
 
             if isinstance(ent, (Player, Enemy)) or ent.name == "Boss":
                 shot = ent.shoot()
@@ -68,6 +73,9 @@ class EntityManager:
         for ent in self.entity_list:
             if hasattr(ent, "draw_particles"):
                 ent.draw_particles(self.window)
+
+        draw_grain_overlay(self.window)
+
 
     def handle_collisions(self):
         EntityMediator.verify_collision(self, self.entity_list)

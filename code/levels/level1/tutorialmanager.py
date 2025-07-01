@@ -10,9 +10,16 @@ class TutorialManager:
         self.step = 0
         self.done = False
         self.enemy_spawned = False
+        self.last_shot_state = False
 
     def update(self):
         keys = pygame.key.get_pressed()
+
+        just_shot = self.player.shot_fired and not self.last_shot_state
+        self.last_shot_state = self.player.shot_fired  # atualiza o estado
+        shot = self.player.shoot()
+        if shot:
+            self.entity_manager.add_entity(shot)
 
         if self.step == 0:
             self.draw_text("Mova-se com as setas ou WASD")
@@ -21,7 +28,7 @@ class TutorialManager:
 
         elif self.step == 1:
             self.draw_text("Atire com Ctrl")
-            if self.player.shot_fired:
+            if just_shot:
                 self.step += 1
 
         elif self.step == 2:

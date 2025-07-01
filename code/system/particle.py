@@ -1,6 +1,9 @@
 import pygame
 import random
 
+from code.system.assetmanager import AssetManager
+
+
 class Particle:
     def __init__(self, position):
         self.pos = list(position)
@@ -17,6 +20,9 @@ class Particle:
     def draw(self, surface):
         if self.radius > 0:
             pygame.draw.circle(surface, self.color, (int(self.pos[0]), int(self.pos[1])), int(self.radius))
+
+
+
 
 # ✨ Partículas flutuantes mágicas
 class AmbientFloatParticle:
@@ -128,3 +134,38 @@ class ImpactParticle:
             glow = pygame.Surface((self.radius*4, self.radius*4), pygame.SRCALPHA)
             pygame.draw.circle(glow, (*self.color, int(self.alpha)), (self.radius*2, self.radius*2), int(self.radius))
             surface.blit(glow, (self.pos[0] - self.radius*2, self.pos[1] - self.radius*2))
+
+
+
+grain_frames = []
+grain_index = 0
+grain_loaded = False
+grain_frame_timer = 0
+grain_frame_delay = 2  # muda a cada 2 frames (ajuste conforme quiser)
+
+def draw_grain_overlay(surface):
+    global grain_frames, grain_index, grain_loaded, grain_frame_timer
+
+    if not grain_loaded:
+        from code.system.assetmanager import AssetManager
+        grain_frames = [AssetManager.get_image(f"grain_{i}.png").convert_alpha() for i in range(4)]
+        grain_loaded = True
+
+    # ⏱️ Controle de tempo entre trocas
+    grain_frame_timer += 1
+    if grain_frame_timer >= grain_frame_delay:
+        grain_index = (grain_index + 1) % len(grain_frames)
+        grain_frame_timer = 0
+
+    # Blit do grão atual
+    grain = grain_frames[grain_index]
+    if not hasattr(draw_grain_overlay, "grain_scaled"):
+        draw_grain_overlay.grain_scaled = [
+            pygame.transform.scale(frame, surface.get_size()) for frame in grain_frames
+        ]
+
+    grain.set_alpha(8)  # ajuste a intensidade aqui
+    surface.blit(grain, (0, 0))
+
+
+

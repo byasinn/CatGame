@@ -99,6 +99,8 @@ class Level1_0:
                 if self.tutorial_manager.done:
                     self.phase = "cutscene"
 
+
+
             # FASE 2: Cutscene
             elif self.phase == "cutscene":
                 self.cutscene_manager.update(event_list)

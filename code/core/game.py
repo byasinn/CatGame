@@ -13,6 +13,8 @@ from code.settings.settingsmenu import SettingsMenu
 from code.system.audiocontroller import AudioController
 from code.settings.lang import t
 from code.levels.level1.cutscenes1 import run_scene
+from code.system.particle import draw_grain_overlay
+
 
 class Game:
     def __init__(self):
@@ -82,6 +84,7 @@ class Game:
     def show_intro_screen(self):
         intro_img = AssetManager.get_image("IntroScreen.png")
         intro_img = pygame.transform.scale(intro_img, (self.window.get_width(), self.window.get_height()))
+        draw_grain_overlay(self.window)
 
         if not pygame.mixer_music.get_busy():
             self.audio.play_music("intro")
