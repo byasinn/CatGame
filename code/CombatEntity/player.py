@@ -90,7 +90,10 @@ class Player(CombatEntity):
             except Exception as e:
                 print(f"[Erro ao tocar som de tiro] {e}")
 
-            return PlayerShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
+            spawn_x = self.rect.centerx + 30
+            spawn_y = self.rect.centery + 10
+
+            return PlayerShot(name=f'{self.name}Shot', position=(spawn_x, spawn_y))
 
         self.shot_fired = False
         return None
