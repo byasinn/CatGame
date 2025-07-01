@@ -30,7 +30,7 @@ def run_scene(window):
             img.set_alpha(0 if effect == "fadein" else 255)
             rect = img.get_rect()
             if side == "left":
-                rect.bottomleft = (50, window.get_height() - 30)
+                rect.bottomleft = (- 90, window.get_height() + 60)
             else:
                 rect.bottomright = (window.get_width() - 50, window.get_height() - 30)
             character_surfs.append((img, rect, effect))

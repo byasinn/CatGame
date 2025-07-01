@@ -58,6 +58,8 @@ ENTITY_SPEED = {
     'Scene1Bg': 0,
     'Scene1_1Bg': 1,
     'Scene1_2Bg': 2,
+    'Scene1_3Bg': 1,
+    'Scene1_4Bg': 2,
 
 }
 
@@ -109,6 +111,8 @@ ENTITY_HEALTH = {
     'Scene1Bg': 999,
     'Scene1_1Bg': 999,
     'Scene1_2Bg': 999,
+    'Scene1_3Bg': 999,
+    'Scene1_4Bg': 999,
 
 }
 
@@ -160,6 +164,8 @@ ENTITY_DAMAGE = {
     'Scene1Bg': 0,
     'Scene1_1Bg': 0,
     'Scene1_2Bg': 0,
+    'Scene1_3Bg': 0,
+    'Scene1_4Bg': 0,
 
 }
 
@@ -211,6 +217,8 @@ ENTITY_SCORE = {
     'Scene1Bg': 0,
     'Scene1_1Bg': 0,
     'Scene1_2Bg': 0,
+    'Scene1_3Bg': 0,
+    'Scene1_4Bg': 0,
 
 }
 
