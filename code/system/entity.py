@@ -8,12 +8,17 @@ from code.system.config import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
 from pygame.transform import scale
 
 class Entity(ABC):
-    def __init__(self, name: str, position: tuple):
+    def __init__(self, name: str, position: tuple, scale_image=True):
         self.name = name
         loaded = AssetManager.get_image(name + ".png")
-        scale_factor = self.get_scale_factor()  # calcula baseado na janela
-        new_size = (int(loaded.get_width() * scale_factor), int(loaded.get_height() * scale_factor))
-        self.surf = scale(loaded, new_size)
+
+        if scale_image:
+            scale_factor = self.get_scale_factor()
+            new_size = (int(loaded.get_width() * scale_factor), int(loaded.get_height() * scale_factor))
+            self.surf = scale(loaded, new_size)
+        else:
+            self.surf = loaded
+
         self.rect = self.surf.get_rect(left=position[0], top=position[1])
         self.speed = 0
         self.health = ENTITY_HEALTH[self.name]
