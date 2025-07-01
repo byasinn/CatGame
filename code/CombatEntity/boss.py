@@ -1,6 +1,8 @@
 import math
 import pygame
 import random
+
+from code.system.assetmanager import AssetManager
 from code.system.config import ENTITY_SHOT_DELAY, ENTITY_SPEED
 from code.shots.enemyshot import EnemyShot
 from code.CombatEntity.combatentity import CombatEntity
@@ -38,7 +40,7 @@ class Boss(CombatEntity):
         if self.shot_delay <= 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
             try:
-                sound = pygame.mixer.Sound("./asset/BossShot.mp3")
+                sound = AssetManager.get_sound("BossShot.mp3")
                 sound.set_volume(0.5)
                 sound.play()
             except Exception as e:

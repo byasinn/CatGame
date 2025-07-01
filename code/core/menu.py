@@ -5,6 +5,8 @@ import sys
 import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
+
+from code.factory.backgroundfactory import BackgroundFactory
 from code.settings.lang import t
 from code.system.assetmanager import AssetManager
 from code.system.config import MENU_OPTION, COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
@@ -14,26 +16,24 @@ class Menu:
     def __init__(self, window, audio_controller):
         self.window = window
         self.audio = audio_controller
-        raw_bg = AssetManager.get_image("MenuBg.png").convert()
-        self.surf = pygame.transform.scale(raw_bg, self.window.get_size())
-        self.rect = self.surf.get_rect(left=0, top=0)
         self.cat_left = AssetManager.get_image("LeonMenu.png")
         self.cat_right = AssetManager.get_image("MoraMenu.png")
         self.cat_left_rect = self.cat_left.get_rect(center=(self.window.get_width() // 2 - 150, 95))
         self.cat_right_rect = self.cat_right.get_rect(center=(self.window.get_width() // 2 + 150, 95))
         self.cat_angle = 0
+        self.bg_list = BackgroundFactory.create("Menu")
 
     def run(self, ):
         menu_option = 0
         if self.audio.current_music != "menu":
             self.audio.play_music("menu")
 
-        img_scaled = pygame.transform.scale(self.surf, self.window.get_size())
-        self.window.blit(source=img_scaled, dest=self.rect)
-
         while True:
             # draw images
-            self.window.blit(source=self.surf, dest=self.rect)
+            for bg in self.bg_list:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
+
             self.menu_text(50, t("title_main1"), COLOR_PINK, ((self.window.get_width() / 2), 70), is_title=True)
             self.menu_text(50, t("title_main2"), COLOR_WHITE, ((self.window.get_width() / 2), 120), is_title=True)
 
@@ -79,8 +79,11 @@ class Menu:
         selected = 0
 
         while True:
-            self.window.blit(self.surf, self.rect)
-            self.menu_text(40,t(title), COLOR_PINK, (self.window.get_width() // 2, 70), True)
+            for bg in self.bg_list:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
+
+            self.menu_text(40, t(title), COLOR_PINK, (self.window.get_width() // 2, 70), True)
 
             options_translated = [t(opt.lower()) for opt in options]
             for i, label in enumerate(options_translated):

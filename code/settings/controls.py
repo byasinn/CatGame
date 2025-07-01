@@ -1,4 +1,6 @@
 import pygame
+
+from code.system.assetmanager import AssetManager
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 
 CONTROLS = {
@@ -39,8 +41,8 @@ def run(window):
         clock.tick(60)
 
 def _text(window, size, text, color, center, is_title=False):
-    font_path = "./asset/PressStart2P-Regular.ttf" if is_title else "./asset/VT323-Regular.ttf"
-    font = pygame.font.Font(font_path, size)
+    font_name = "PressStart2P-Regular" if is_title else "VT323-Regular"
+    font = AssetManager.get_font(font_name, size)
     surf = font.render(text, True, color).convert_alpha()
     rect = surf.get_rect(center=center)
     window.blit(surf, rect)

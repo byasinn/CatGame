@@ -19,8 +19,8 @@ ENTITY_SPEED = {
     'Level1Bg4' : 4,
     'Level1Bg5' : 5,
     'Level1Bg6' : 6,
-    "Player1": 3,
-    "Player1Shot": 6,
+    "Player1": 3.5,
+    "Player1Shot": 7,
     "Player2": 3,
     "Player2Shot": 6,
     "Enemy1": 2,
@@ -41,6 +41,12 @@ ENTITY_SPEED = {
     'Level3Bg4': 1,
     'Level3Bg5': 2,
 
+    'MenuBg0': 0,
+    'MenuBg1': 1,
+    'MenuBg2': 2,
+    'MenuBg3': 3,
+    'MenuBg4': 4,
+
     'Boss' : 2,
     'BossShot': 6,
 
@@ -48,6 +54,10 @@ ENTITY_SPEED = {
     'GameOverBg1': 1,
     'GameOverBg2': 2,
     'GameOverLight': 0,
+
+    'Scene1Bg': 0,
+    'Scene1_1Bg': 1,
+    'Scene1_2Bg': 2,
 
 }
 
@@ -82,6 +92,12 @@ ENTITY_HEALTH = {
     'Level3Bg4': 999,
     'Level3Bg5': 999,
 
+    'MenuBg0': 999,
+    'MenuBg1': 999,
+    'MenuBg2': 999,
+    'MenuBg3': 999,
+    'MenuBg4': 999,
+
     'Boss': 500,
     'BossShot': 1,
 
@@ -89,6 +105,10 @@ ENTITY_HEALTH = {
     'GameOverBg1': 999,
     'GameOverBg2': 999,
     'GameOverLight': 999,
+
+    'Scene1Bg': 999,
+    'Scene1_1Bg': 999,
+    'Scene1_2Bg': 999,
 
 }
 
@@ -123,6 +143,12 @@ ENTITY_DAMAGE = {
     'Level3Bg4': 0,
     'Level3Bg5': 0,
 
+    'MenuBg0': 0,
+    'MenuBg1': 0,
+    'MenuBg2': 0,
+    'MenuBg3': 0,
+    'MenuBg4': 0,
+
     'Boss': 1,
     'BossShot': 30,
 
@@ -130,6 +156,11 @@ ENTITY_DAMAGE = {
     'GameOverBg1': 0,
     'GameOverBg2': 0,
     'GameOverLight': 0,
+
+    'Scene1Bg': 0,
+    'Scene1_1Bg': 0,
+    'Scene1_2Bg': 0,
+
 }
 
 ENTITY_SCORE = {
@@ -163,6 +194,12 @@ ENTITY_SCORE = {
     'Level3Bg4': 0,
     'Level3Bg5': 0,
 
+    'MenuBg0': 0,
+    'MenuBg1': 0,
+    'MenuBg2': 0,
+    'MenuBg3': 0,
+    'MenuBg4': 0,
+
     'Boss': 1000,
     'BossShot': 0,
 
@@ -171,10 +208,14 @@ ENTITY_SCORE = {
     'GameOverBg2': 0,
     'GameOverLight': 0,
 
+    'Scene1Bg': 0,
+    'Scene1_1Bg': 0,
+    'Scene1_2Bg': 0,
+
 }
 
 ENTITY_SHOT_DELAY = {
-    "Player1": 20,
+    "Player1": 10,
     'Player2': 20,
     "Enemy1": 20,
     'Enemy2': 20,

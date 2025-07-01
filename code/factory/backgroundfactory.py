@@ -1,5 +1,5 @@
 import pygame
-from code.DrawableEntity.MovingEntity.background import Background
+from code.DrawableEntity.MovingEntity.background import Background, BackgroundFloat
 from code.DrawableEntity.StaticEntity.backgroundlight import BackgroundLight
 
 class BackgroundFactory:
@@ -47,5 +47,10 @@ class BackgroundFactory:
                     Background(f'GameOverBg{i}', (width, 0))
                 ])
             list_bg.append(BackgroundLight("GameOverLight", (0, 0)))
+
+        elif bg_type == "Menu":
+            for i in range(4):  # ou mais camadas, se quiser
+                list_bg.append(BackgroundFloat(f'MenuBg{i}', (0, 0)))
+            list_bg.append(BackgroundLight("LightOverlay_Menu", (0, 0)))
 
         return list_bg

@@ -1,4 +1,8 @@
+import os
+
 import pygame
+
+from code.system.assetmanager import AssetManager
 
 class AudioController:
     def __init__(self):
@@ -7,47 +11,49 @@ class AudioController:
         self.sfx_volume = 0.5
         self.current_music = None
 
-        # 🎵 Músicas de fundo (mp3)
         self.music_tracks = {
-            "intro": "./asset/intro.mp3",
-            "menu": "./asset/Menu.mp3",
-            "level1": "./asset/Level1.mp3",
-            "level2": "./asset/Level2.mp3",
-            "level3": "./asset/Level3.mp3",
-            "arcade": "./asset/LevelArcade.mp3",
-            "gameover": "./asset/GameOver.mp3",
-            "score": "./asset/Score.mp3",
+            "intro": "intro.mp3",
+            "menu": "Menu.mp3",
+            "level1": "Level1.mp3",
+            "level2": "Level2.mp3",
+            "level3": "Level3.mp3",
+            "arcade": "LevelArcade.mp3",
+            "gameover": "GameOver.mp3",
+            "score": "Score.mp3",
         }
 
-        # 🔊 Efeitos sonoros (wav ou mp3)
         self.sound_effects = {
-            "menu_move": "./asset/MenuMove.wav",
-            "menu_select": "./asset/MenuSelect.wav",
-            "boss_death": "./asset/BossDeath.mp3",
-            "boss_shot": "./asset/BossShot.mp3",
-            "enemy1_death": "./asset/Enemy1Death.mp3",
-            "enemy2_death": "./asset/Enemy2Death.mp3",
-            "enemy1_shot": "./asset/Enemy1Shot.mp3",
-            "enemy2_shot": "./asset/Enemy2Shot.mp3",
-            "player1_shot": "./asset/Player1Shot.mp3",
-            "player2_shot": "./asset/Player2Shot.mp3",
-            "aura_burst": "./asset/AuraBurst.mp3",
+            "menu_move": "MenuMove.wav",
+            "menu_select": "MenuSelect.wav",
+            "boss_death": "BossDeath.mp3",
+            "boss_shot": "BossShot.mp3",
+            "enemy1_death": "Enemy1Death.mp3",
+            "enemy2_death": "Enemy2Death.mp3",
+            "enemy1_shot": "Enemy1Shot.mp3",
+            "enemy2_shot": "Enemy2Shot.mp3",
+            "player1_shot": "Player1Shot.mp3",
+            "player2_shot": "Player2Shot.mp3",
+            "aura_burst": "AuraBurst.mp3",
         }
 
-        # Cache para evitar recarregamento
         self.loaded_sounds = {}
 
     def play_music(self, name, loop=-1):
         if name == self.current_music:
             return
 
-        path = self.music_tracks.get(name)
-        if path:
+        filename = self.music_tracks.get(name)
+        if filename:
             try:
-                pygame.mixer_music.load(path)
-                pygame.mixer_music.set_volume(self.music_volume)
-                pygame.mixer_music.play(loop)
-                self.current_music = name
+                # mesmo sem cache — música geralmente é só uma
+                for root, _, files in os.walk(AssetManager.SOUND_DIR):
+                    for file in files:
+                        if file.lower() == filename.lower():
+                            pygame.mixer_music.load(os.path.join(root, file))
+                            pygame.mixer_music.set_volume(self.music_volume)
+                            pygame.mixer_music.play(loop)
+                            self.current_music = name
+                            return
             except Exception as e:
                 print(f"[Erro ao tocar música '{name}']: {e}")
 
@@ -56,14 +62,14 @@ class AudioController:
         self.current_music = None
 
     def play_sound(self, name):
-        path = self.sound_effects.get(name)
-        if not path:
+        if name not in self.sound_effects:
             print(f"[Som não encontrado: {name}]")
             return
 
         if name not in self.loaded_sounds:
             try:
-                self.loaded_sounds[name] = pygame.mixer.Sound(path)
+                filename = self.sound_effects[name]
+                self.loaded_sounds[name] = AssetManager.get_sound(filename)
             except Exception as e:
                 print(f"[Erro ao carregar som '{name}']: {e}")
                 return

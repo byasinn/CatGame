@@ -1,13 +1,15 @@
 import pygame
+
+from code.system.assetmanager import AssetManager
 from code.system.entity import Entity
 
 class BackgroundLight(Entity):
     def __init__(self, name: str, position: tuple):
         self.original_name = name
-        raw = pygame.image.load(f'./asset/{name}.png').convert_alpha()
+        self.image = AssetManager.get_image(f"{name}.png")
         win = pygame.display.get_surface()
         w, h = win.get_size()
-        self.surf = pygame.transform.scale(raw, (w, h))
+        self.surf = pygame.transform.scale(self.image, (w, h))
         self.rect = self.surf.get_rect(topleft=position)
         self.name = name
         self.health = 999

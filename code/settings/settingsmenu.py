@@ -1,5 +1,7 @@
 import pygame
 from pygame import Surface
+
+from code.system.assetmanager import AssetManager
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings import display, audio, gameplay, language, controls
 from code.settings.lang import t
@@ -66,8 +68,8 @@ class SettingsMenu:
         return False
 
     def draw_text(self, size, text, color, center, is_title=False):
-        font_path = "./asset/PressStart2P-Regular.ttf" if is_title else "./asset/VT323-Regular.ttf"
-        font = pygame.font.Font(font_path, size)
+        font_name = "PressStart2P-Regular" if is_title else "VT323-Regular"
+        font = AssetManager.get_font(font_name, size)
         surf = font.render(text, True, color).convert_alpha()
         rect = surf.get_rect(center=center)
         self.window.blit(surf, rect)

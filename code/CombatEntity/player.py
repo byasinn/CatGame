@@ -3,6 +3,8 @@
 import math
 
 import pygame
+
+from code.system.assetmanager import AssetManager
 from code.system.config import ENTITY_SPEED, PLAYER_KEY_UP, PLAYER_KEY_DOWN, PLAYER_KEY_LEFT, \
     PLAYER_KEY_RIGHT, PLAYER_KEY_SHOOT, ENTITY_SHOT_DELAY
 from code.shots.playershot import PlayerShot
@@ -43,7 +45,7 @@ class Player(CombatEntity):
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
 
             try:
-                sound = pygame.mixer.Sound(f"./asset/{self.name}Shot.mp3")
+                sound = AssetManager.get_sound(f"{self.name}Shot.mp3")
                 sound.set_volume(0.5)
                 sound.play()
             except Exception as e:

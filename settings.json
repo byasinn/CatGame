@@ -1,9 +1,9 @@
 {
-  "resolution_index": 2,
-  "fullscreen": false,
+  "resolution_index": 4,
+  "fullscreen": true,
   "music_volume": 0.6,
   "sfx_volume": 0.8,
   "language": "pt",
-  "visual_effects": false,
-  "gore": false
+  "visual_effects": true,
+  "gore": true
 }

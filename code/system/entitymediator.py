@@ -1,6 +1,7 @@
 import random
 import pygame
 from code.CombatEntity.enemy import Enemy
+from code.system.assetmanager import AssetManager
 from code.system.collisionmap import CollisionMap
 from code.shots.enemyshot import EnemyShot
 from code.system.entity import Entity
@@ -60,21 +61,22 @@ class EntityMediator:
                     EntityMediator._spawn_blood(entity_manager, ent.rect.center, count=5)
 
                     # 🔊 Som de morte
-                    try:
-                        sound = pygame.mixer.Sound(f"./asset/{ent.name}Death.mp3")
-                        sound.set_volume(0.6)
-                        sound.play()
-                    except Exception as e:
-                        print(f"[Erro ao tocar som de morte de {ent.name}] {e}")
+                    if ent.name == "Boss":
+                        EntityMediator.__give_score(ent, entity_list)
+                        try:
+                            sound = AssetManager.get_sound("BossDeath.mp3")
+                            sound.set_volume(0.7)
+                            sound.play()
+                        except Exception as e:
+                            print(f"[Erro ao tocar som de morte do Boss] {e}")
 
-                elif ent.name == "Boss":
-                    EntityMediator.__give_score(ent, entity_list)
-                    try:
-                        sound = pygame.mixer.Sound("./asset/BossDeath.mp3")
-                        sound.set_volume(0.7)
-                        sound.play()
-                    except Exception as e:
-                        print(f"[Erro ao tocar som de morte do Boss] {e}")
+                    else:
+                        try:
+                            sound = AssetManager.get_sound(f"{ent.name}Death.mp3")
+                            sound.set_volume(0.6)
+                            sound.play()
+                        except Exception as e:
+                            print(f"[Erro ao tocar som de morte de {ent.name}] {e}")
 
                 entity_list.remove(ent)
 

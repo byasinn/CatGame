@@ -119,7 +119,7 @@ class HUDRenderer:
         else:
             alpha = 255
 
-        font = pygame.font.Font("./asset/PressStart2P-Regular.ttf", 16)
+        font = AssetManager.get_font("PressStart2P-Regular", 16)
         msg_surface = font.render(text, True, (255, 255, 255))
         msg_surface.set_alpha(alpha)
         rect = msg_surface.get_rect(center=(surface.get_width() // 2, surface.get_height() // 4))

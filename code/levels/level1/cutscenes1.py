@@ -1,51 +1,96 @@
 import sys
 import math
 import pygame
+
+from code.DrawableEntity.MovingEntity.background import BackgroundFloat
+from code.levels.level1.SceneCinematicSystem import SCENE1_DATA
 from code.system.assetmanager import AssetManager
 from code.settings.lang import t
 
 # ===============================
 # 🔷 SCENES (chamadas pelo level.py)
 # ===============================
-def run_scene(window, scene_name: str, dialogue_count: int = 3):
-    """
-    Exibe uma cena entre fases (estilo novela com falas traduzidas).
-    """
-    leon = AssetManager.get_image(f"LeonMenu{scene_name[-1]}.png")
-    mora = AssetManager.get_image(f"MoraMenu{scene_name[-1]}.png")
-    leon_rect = leon.get_rect(bottomleft=(50, window.get_height() - 30))
-    mora_rect = mora.get_rect(bottomright=(window.get_width() - 50, window.get_height() - 30))
-
-    font = AssetManager.get_font("VT323-Regular.ttf", 22)
-    dialogues = t(scene_name)
-    if not isinstance(dialogues, list):
-        dialogues = [dialogues]
+def run_scene(window):
+    clock = pygame.time.Clock()
+    font = AssetManager.get_font("VT323-Regular", 22)
 
     current = 0
-    clock = pygame.time.Clock()
+    fade_speed = 8
+    max_alpha = 255
 
-    while True:
-        window.fill((0, 0, 0))
-        window.blit(leon, leon_rect)
-        window.blit(mora, mora_rect)
+    while current < len(SCENE1_DATA):
+        data = SCENE1_DATA[current]
 
-        text = font.render(dialogues[current], True, (255, 255, 255))
-        text_rect = text.get_rect(center=(window.get_width() // 2, window.get_height() // 2))
-        window.blit(text, text_rect)
+        bg_list = [BackgroundFloat(bg_name, (0, 0)) for bg_name in data.get("background", [])]
 
-        pygame.display.flip()
+        char_data = data.get("characters", [])
+        character_surfs = []
+        for name, side, effect in char_data:
+            img = AssetManager.get_image(name)
+            img.set_alpha(0 if effect == "fadein" else 255)
+            rect = img.get_rect()
+            if side == "left":
+                rect.bottomleft = (50, window.get_height() - 30)
+            else:
+                rect.bottomright = (window.get_width() - 50, window.get_height() - 30)
+            character_surfs.append((img, rect, effect))
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                if current < len(dialogues) - 1:
-                    current += 1
-                else:
-                    return
+        text = data.get("text", "")
+        lines = wrap_text(text, font, window.get_width() * 0.8)
+        fade_alpha = 0
+        show_text = False
+        skip = False
 
-        clock.tick(60)
+        while not skip:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and show_text:
+                    skip = True
+
+            window.fill((0, 0, 0))
+
+            for bg in bg_list:
+                bg.move()
+                window.blit(bg.surf, bg.rect)
+
+            for i in range(len(character_surfs)):
+                surf, rect, effect = character_surfs[i]
+                if effect == "fadein":
+                    fade_alpha = min(fade_alpha + fade_speed, max_alpha)
+                    surf.set_alpha(fade_alpha)
+                elif effect == "slideleft":
+                    rect.x -= 1
+                window.blit(surf, rect)
+
+            if fade_alpha >= max_alpha or not char_data:
+                show_text = True
+                for i, line in enumerate(lines):
+                    rect = line.get_rect(center=(window.get_width() // 2, window.get_height() - 120 + i * 25))
+                    window.blit(line, rect)
+
+            pygame.display.flip()
+            clock.tick(60)
+
+        current += 1
+
+    return  # ✅ Sai da função só depois da última cena
+
+def wrap_text(text, font, max_width):
+    words = text.split(" ")
+    lines = []
+    current = ""
+    for word in words:
+        test = current + word + " "
+        if font.size(test)[0] < max_width:
+            current = test
+        else:
+            lines.append(font.render(current.strip(), True, (255, 255, 255)))
+            current = word + " "
+    if current:
+        lines.append(font.render(current.strip(), True, (255, 255, 255)))
+    return lines
 
 # ===============================
 # 🔶 CUTSCENES (dentro de levels, com NPCs)
@@ -78,7 +123,7 @@ class CutsceneManager:
         if self.npc_pos_x <= self.npc_target_x:
             if self.phase < len(self.dialogue_list):
                 speaker, message = self.dialogue_list[self.phase]
-                font = pygame.font.Font("./asset/PressStart2P-Regular.ttf", 14)
+                font = AssetManager.get_font("PressStart2P-Regular", 16)
                 wrapped_lines = self.render_wrapped_text(message, font, self.window.get_width() // 2.5)
 
                 base_pos = (

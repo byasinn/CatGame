@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 import pygame.image
+
+from code.system.assetmanager import AssetManager
 from code.system.config import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
 from pygame.transform import scale
 
 class Entity(ABC):
     def __init__(self, name: str, position: tuple):
         self.name = name
-        loaded = pygame.image.load('./asset/' + name + '.png').convert_alpha()
+        loaded = AssetManager.get_image(name + ".png")
         scale_factor = self.get_scale_factor()  # calcula baseado na janela
         new_size = (int(loaded.get_width() * scale_factor), int(loaded.get_height() * scale_factor))
         self.surf = scale(loaded, new_size)
