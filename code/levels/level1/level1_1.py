@@ -30,7 +30,7 @@ class Level1_0:
         self.entity_list.append(self.player)
 
         # Segundo jogador se modo cooperativo
-        if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:
+        if "COOPERATIVE" in game_mode.upper() or "2P" in game_mode.upper():
             self.player2 = EntityFactory.get_entity('Player2', window=window)
             self.player2.score = player_score[1]
             self.entity_list.append(self.player2)
