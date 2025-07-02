@@ -12,7 +12,11 @@ class Background(Entity):
     def __init__(self, name: str, position: tuple):
         self.bg_name = name
         base_name = name.lower().split(".")[0]
-        self.apply_custom_rescale = not base_name.startswith("level") and not base_name.startswith("light")
+        self.apply_custom_rescale = not (
+                base_name.startswith("level")
+                or base_name.startswith("light")
+                or base_name.startswith("foreground")
+        )
 
         super().__init__(name, position)
 
@@ -36,10 +40,9 @@ class Background(Entity):
             self.rect.topleft = (-extra_w // 2, -extra_h // 2)
 
     def move(self):
-        self.rect.centerx -= ENTITY_SPEED[self.name]
+        self.rect.x -= ENTITY_SPEED[self.name]
         if self.rect.right <= 0:
-            self.rect.left = pygame.display.get_surface().get_width()
-
+            self.rect.x += self.rect.width * 2
 
 class BackgroundFloat(Background):
     def __init__(self, name: str, position: tuple):

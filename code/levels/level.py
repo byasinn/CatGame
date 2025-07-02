@@ -49,7 +49,9 @@ class Level:
 
         # Transição de Level1 → cutscene2 → Level1_2
         if self.name == "Level1" and result:
-            run_scene(self.window, "scenes2", 3)
+            run_scene(self.window, scene_key="scenes2", count=None)
+
+
 
             # Cria o próximo Level e executa
             next_level = Level(

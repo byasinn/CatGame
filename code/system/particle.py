@@ -164,7 +164,7 @@ def draw_grain_overlay(surface):
             pygame.transform.scale(frame, surface.get_size()) for frame in grain_frames
         ]
 
-    grain.set_alpha(8)  # ajuste a intensidade aqui
+    grain.set_alpha(5)  # ajuste a intensidade aqui
     surface.blit(grain, (0, 0))
 
 

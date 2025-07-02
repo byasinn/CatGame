@@ -11,9 +11,8 @@ class EntityFactory:
         elif name in ["Enemy1", "Enemy2", "Boss"]:
             return EnemyFactory.create(name)
 
-        elif "Bg" in name:
-            base = name.replace("Bg", "")
-            return BackgroundFactory.create(base)
+        elif name.endswith("Bg"):
+            return BackgroundFactory.create(name[:-2])
 
         elif name == "EnemyTest":
             from code.CombatEntity.enemy import Enemy

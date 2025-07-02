@@ -19,6 +19,14 @@ ENTITY_SPEED = {
     'Level1Bg4' : 4,
     'Level1Bg5' : 5,
     'Level1Bg6' : 6,
+
+    'Level1_2Bg0': 0,
+    'Level1_2Bg1': 1,
+    'Level1_2Bg2': 2,
+    'LightOverlay_Level1_2': 0,
+    "Foreground1_2Bg0": 7,
+    "Foreground1_2Bg1": 3,
+
     "Player1": 3.5,
     "Player1Shot": 7,
     "Player2": 3,
@@ -41,6 +49,10 @@ ENTITY_SPEED = {
     'Level3Bg3': 2,
     'Level3Bg4': 1,
     'Level3Bg5': 2,
+
+    'Scene1_2_00': 0,
+    'Scene1_2_01': 1,
+    'Scene1_2_02': 2,
 
     'MenuBg0': 0,
     'MenuBg1': 1,
@@ -73,6 +85,14 @@ ENTITY_HEALTH = {
     'Level1Bg4' : 999,
     'Level1Bg5' : 999,
     'Level1Bg6' : 999,
+
+    'Level1_2Bg0': 999,
+    'Level1_2Bg1': 999,
+    'Level1_2Bg2': 999,
+    'LightOverlay_Level1_2': 999,
+    "Foreground1_2Bg0": 999,
+    "Foreground1_2Bg1": 999,
+
     "Player1": 1000,
     "Player1Shot": 1,
     "Player2": 1000,
@@ -95,6 +115,10 @@ ENTITY_HEALTH = {
     'Level3Bg3': 999,
     'Level3Bg4': 999,
     'Level3Bg5': 999,
+
+    'Scene1_2_00': 999,
+    'Scene1_2_01': 999,
+    'Scene1_2_02': 999,
 
     'MenuBg0': 999,
     'MenuBg1': 999,
@@ -127,6 +151,14 @@ ENTITY_DAMAGE = {
     'Level1Bg4' : 0,
     'Level1Bg5' : 0,
     'Level1Bg6' : 0,
+
+    'Level1_2Bg0': 0,
+    'Level1_2Bg1': 0,
+    'Level1_2Bg2': 0,
+    'LightOverlay_Level1_2': 0,
+    "Foreground1_2Bg0": 0,
+    "Foreground1_2Bg1": 0,
+
     "Player1": 1,
     "Player1Shot": 25,
     "Player2": 1,
@@ -149,6 +181,10 @@ ENTITY_DAMAGE = {
     'Level3Bg3': 0,
     'Level3Bg4': 0,
     'Level3Bg5': 0,
+
+    'Scene1_2_00': 0,
+    'Scene1_2_01': 0,
+    'Scene1_2_02': 0,
 
     'MenuBg0': 0,
     'MenuBg1': 0,
@@ -181,6 +217,14 @@ ENTITY_SCORE = {
     'Level1Bg4' : 0,
     'Level1Bg5' : 0,
     'Level1Bg6' : 0,
+
+    'Level1_2Bg0': 0,
+    'Level1_2Bg1': 0,
+    'Level1_2Bg2': 0,
+    'LightOverlay_Level1_2': 0,
+    "Foreground1_2Bg0": 0,
+    "Foreground1_2Bg1": 0,
+
     "Player1": 0,
     "Player1Shot": 0,
     "Player2": 0,
@@ -203,6 +247,10 @@ ENTITY_SCORE = {
     'Level3Bg3': 0,
     'Level3Bg4': 0,
     'Level3Bg5': 0,
+
+    'Scene1_2_00': 0,
+    'Scene1_2_01': 0,
+    'Scene1_2_02': 0,
 
     'MenuBg0': 0,
     'MenuBg1': 0,
@@ -227,7 +275,7 @@ ENTITY_SCORE = {
 }
 
 ENTITY_SHOT_DELAY = {
-    "Player1": 10,
+    "Player1": 20,
     'Player2': 20,
     "Enemy1": 20,
     'Enemy2': 20,

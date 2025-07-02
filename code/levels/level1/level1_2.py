@@ -23,6 +23,7 @@ class Level1_2:
         self.player.score = player_score[0]
         self.entity_list.append(self.player)
 
+
         # Cooperativo (se aplicável)
         if game_mode.lower() in ["cooperative", "competitive"]:
             self.player2 = EntityFactory.get_entity('Player2', window=window)
@@ -30,7 +31,8 @@ class Level1_2:
             self.entity_list.append(self.player2)
 
         # Fundo
-        self.entity_list.extend(EntityFactory.get_entity("Level1Bg"))
+        self.entity_list.extend(EntityFactory.get_entity("Level1_2Bg"))
+        self.entity_list.extend(EntityFactory.get_entity("Foreground1_2Bg"))
 
         # Componentes principais
         self.entity_manager = EntityManager(self.entity_list, self.window)
@@ -80,6 +82,11 @@ class Level1_2:
             self.entity_manager.draw_entities()
             self.entity_manager.draw_particles()
             self.entity_manager.update_visual_effects()
+
+            for entity in self.entity_manager.get_entities():
+                if "Foreground1_2Bg" in entity.name:
+                    entity.move()
+                    self.window.blit(entity.surf, entity.rect)
 
             self.hud.draw_hud(
                 players=[self.player],

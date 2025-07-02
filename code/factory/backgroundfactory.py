@@ -1,3 +1,5 @@
+import random
+
 import pygame
 from code.DrawableEntity.MovingEntity.background import Background, BackgroundFloat
 from code.DrawableEntity.StaticEntity.backgroundlight import BackgroundLight
@@ -15,6 +17,28 @@ class BackgroundFactory:
                     Background(f'Level1Bg{i}', (width, 0))
                 ])
             list_bg.append(BackgroundLight("LightOverlay_Level1", (0, 0)))
+
+        elif bg_type == "Level1_2":
+            for i in range(3):
+                list_bg.extend([
+                    Background(f'Level1_2Bg{i}', (0, 0)),
+                    Background(f'Level1_2Bg{i}', (width, 0))
+                ])
+            list_bg.append(BackgroundLight("LightOverlay_Level1_2", (0, 0)))
+
+        elif bg_type == "Foreground1_2":
+            width = pygame.display.get_surface().get_width()
+            # 🔹 Bg0 → contínuo
+            for i in range(2):
+                list_bg.append(Background(f"Foreground1_2Bg0", (i * width, 0)))
+            # 🔹 Bg1 → galhos esporádicos
+            total_instances = random.randint(3, 5)
+            current_x = width * random.randint(1, 2)  # aparece cedo (1–2 telas)
+            for _ in range(total_instances):
+                if random.random() < 0.5:
+                    y_offset = random.randint(-5, 5)
+                    list_bg.append(Background(f"Foreground1_2Bg1", (current_x, y_offset)))
+                current_x += width * random.randint(3, 6)  # espaçamento realista (5–10s)
 
         elif bg_type == "Level2":
             for i in range(4):
