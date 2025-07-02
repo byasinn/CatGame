@@ -24,7 +24,7 @@ class Level1_2:
         self.entity_list.append(self.player)
 
         # Cooperativo (se aplicável)
-        if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:
+        if game_mode.lower() in ["cooperative", "competitive"]:
             self.player2 = EntityFactory.get_entity('Player2', window=window)
             self.player2.score = player_score[1]
             self.entity_list.append(self.player2)
@@ -43,12 +43,15 @@ class Level1_2:
         self.entity_manager.enable_ambient_particles = effects
         self.entity_manager.enable_magic_fog = effects
         self.player.entity_manager = self.entity_manager
+        if hasattr(self, "player2"):
+            self.player2.entity_manager = self.entity_manager
 
         # Timer e spawn
         self.max_duration = 30000  # 30 segundos
         self.start_time = None
         self.last_spawn_time = 0
         self.spawn_interval = 1500  # 1.5s
+        self.enemy_toggle = True  # alternador de inimigos
 
     def run(self, player_score: list[int]):
         if self.audio:
@@ -87,10 +90,12 @@ class Level1_2:
                 entity_count=len(self.entity_manager.get_entities())
             )
 
-            # Spawn de inimigos
+            # Spawn de inimigos alternando entre Enemy1 e Enemy2
             if now - self.last_spawn_time >= self.spawn_interval:
-                enemy = EntityFactory.get_entity("Enemy1", window=self.window)
+                enemy_type = "Enemy1" if self.enemy_toggle else "Enemy2"
+                enemy = EntityFactory.get_entity(enemy_type, window=self.window)
                 self.entity_manager.add_entity(enemy)
+                self.enemy_toggle = not self.enemy_toggle
                 self.last_spawn_time = now
 
             # Terminar fase após o tempo

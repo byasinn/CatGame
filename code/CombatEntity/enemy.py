@@ -24,9 +24,18 @@ class Enemy(CombatEntity):
             self.anim_index = 0
             self.anim_timer = 0
 
+
+
         if self.name == "Enemy2":
             self.zigzag_timer = 0
             self.zigzag_direction = 0
+            self.anim_frames = [
+                AssetManager.get_image("Enemy2_1.png"),
+                AssetManager.get_image("Enemy2_2.png"),
+                AssetManager.get_image("Enemy2_3.png")
+            ]
+            self.anim_index = 0
+            self.anim_timer = 0
 
     def move(self):
         if getattr(self, 'frozen', False):
@@ -56,6 +65,12 @@ class Enemy(CombatEntity):
                 self.anim_timer = 0
                 self.anim_index = (self.anim_index + 1) % len(self.anim_frames)
 
+        if self.name == "Enemy2":
+            self.anim_timer += 1
+            if self.anim_timer >= 10:
+                self.anim_timer = 0
+                self.anim_index = (self.anim_index + 1) % len(self.anim_frames)
+
     def shoot(self):
         if getattr(self, 'frozen', False):
             return None
@@ -79,18 +94,20 @@ class Enemy(CombatEntity):
         return None
 
     def draw(self, surface):
-        if self.name == "Enemy2":
-            offset = math.sin(pygame.time.get_ticks() * 0.005 + self.rect.x * 0.01) * 1.5
-            angle = math.sin(pygame.time.get_ticks() * 0.002 + self.rect.x * 0.01) * 3
-            rotated = pygame.transform.rotate(self.surf, angle)
-            rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
-            surface.blit(rotated, rect)
 
-        elif self.name == "Enemy1":
+        if self.name == "Enemy1":
             surface.blit(self.surf, self.rect)  # hitbox invisível
             frame = self.anim_frames[self.anim_index]
             anim_rect = frame.get_rect(center=self.rect.center)
             surface.blit(frame, anim_rect)
+
+        elif self.name == "Enemy2":
+            frame = self.anim_frames[self.anim_index]
+            offset = math.sin(pygame.time.get_ticks() * 0.005 + self.rect.x * 0.01) * 1.5
+            angle = math.sin(pygame.time.get_ticks() * 0.002 + self.rect.x * 0.01) * 3
+            rotated = pygame.transform.rotate(frame, angle)
+            rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
+            surface.blit(rotated, rect)
 
         else:
             # fallback para qualquer outro tipo

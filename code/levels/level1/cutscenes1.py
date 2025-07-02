@@ -11,47 +11,53 @@ from code.settings.lang import t
 # ===============================
 # 🔷 SCENES (chamadas pelo level.py)
 # ===============================
-def run_scene(window):
+def run_scene(window, scene_key="scenes1", count=3):
     import random
     import pygame
     import sys
 
+    from code.DrawableEntity.MovingEntity.background import BackgroundFloat
+    from code.system.assetmanager import AssetManager
+    from code.settings.lang import t
+
     clock = pygame.time.Clock()
     font = AssetManager.get_font("VT323-Regular", 22)
 
-    # 🔊 Som único com volume variável
     type_sound = AssetManager.get_sound("Type1.mp3")
     next_sound = AssetManager.get_sound("DialogueAdvance.mp3")
+
+    scene_lines = t(scene_key)
+    if not scene_lines or not isinstance(scene_lines, list):
+        print(f"[Cena '{scene_key}' não encontrada]")
+        return
 
     current = 0
     fade_speed = 8
     max_alpha = 255
 
-    while current < len(SCENE1_DATA):
-        data = SCENE1_DATA[current]
+    data = SCENE1_DATA[0]  # Reutiliza cenário e personagens da primeira cena
+    bg_list = [BackgroundFloat(bg_name, (0, 0)) for bg_name in data.get("background", [])]
 
-        bg_list = [BackgroundFloat(bg_name, (0, 0)) for bg_name in data.get("background", [])]
+    char_data = data.get("characters", [])
+    character_surfs = []
+    for name, side, effect in char_data:
+        img = AssetManager.get_image(name)
+        img.set_alpha(0 if effect == "fadein" else 255)
+        rect = img.get_rect()
+        if side == "left":
+            rect.bottomleft = (-90, window.get_height() + 60)
+        else:
+            rect.bottomright = (window.get_width() + 50, window.get_height() + 60)
+        character_surfs.append((img, rect, effect))
 
-        char_data = data.get("characters", [])
-        character_surfs = []
-        for name, side, effect in char_data:
-            img = AssetManager.get_image(name)
-            img.set_alpha(0 if effect == "fadein" else 255)
-            rect = img.get_rect()
-            if side == "left":
-                rect.bottomleft = (-90, window.get_height() + 60)
-            else:
-                rect.bottomright = (window.get_width() + 50, window.get_height() + 60)
-            character_surfs.append((img, rect, effect))
-
-        text = data.get("text", "")
+    while current < min(count, len(scene_lines)):
+        text = scene_lines[current]
         text_chars = list(text)
         typed_text = ""
         char_index = 0
-        typing_delay = 2  # frames entre letras
+        typing_delay = 2
         typing_timer = 0
         text_done = False
-
         fade_alpha = 0
         skip = False
 
@@ -100,6 +106,7 @@ def run_scene(window):
             clock.tick(60)
 
         current += 1
+
 
     return  # ✅ Sai da função só depois da última cena
 
