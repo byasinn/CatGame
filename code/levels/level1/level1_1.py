@@ -11,6 +11,7 @@ from code.factory.entityFactory import EntityFactory
 from code.core.hud import HUDRenderer
 from code.system.eventcontroller import EventController
 from code.settings.lang import t
+from code.system.entitymanager import EntityManager
 
 # Importa os novos módulos separados
 from code.levels.level1.tutorialmanager import TutorialManager
@@ -29,7 +30,6 @@ class Level1_0:
         self.player.score = player_score[0]
         self.entity_list.append(self.player)
 
-        # Segundo jogador se modo cooperativo
         if "COOPERATIVE" in game_mode.upper() or "2P" in game_mode.upper():
             self.player2 = EntityFactory.get_entity('Player2', window=window)
             self.player2.score = player_score[1]
@@ -47,7 +47,11 @@ class Level1_0:
         self.effects_enabled = SettingsManager.get("visual_effects")
         self.entity_manager.enable_ambient_particles = self.effects_enabled
         self.entity_manager.enable_magic_fog = self.effects_enabled
+
+        # Atribui managers aos players
         self.player.entity_manager = self.entity_manager
+        if hasattr(self, "player2"):
+            self.player2.entity_manager = self.entity_manager
 
         # Managers externos (tutorial e cutscene)
         self.tutorial_manager = TutorialManager(self.entity_manager, self.window, self.player)

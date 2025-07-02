@@ -90,8 +90,9 @@ class Player(CombatEntity):
             except Exception as e:
                 print(f"[Erro ao tocar som de tiro] {e}")
 
+            offset_y = -20 if self.name == "Player2" else 10
             spawn_x = self.rect.centerx + 30
-            spawn_y = self.rect.centery + 10
+            spawn_y = self.rect.centery + offset_y
 
             return PlayerShot(name=f'{self.name}Shot', position=(spawn_x, spawn_y))
 

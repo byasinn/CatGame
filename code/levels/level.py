@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from pygame import Surface
-
 # Importa a cena 1 formatada com SCENE1_DATA
 from code.levels.level1.cutscenes1 import run_scene
 from code.levels.level1.level1_1 import Level1_0
 from code.levels.level1.level1_2 import Level1_2
 from code.levels.level2.level2 import Level2
 from code.levels.level3.level3 import Level3
+
 
 # Mapeia os nomes usados no game.py para suas classes
 PHASE_MAP = {
@@ -38,15 +38,17 @@ class Level:
     def run(self, player_score: list[int]):
         # CENA DE ABERTURA da campanha (antes de Level1)
         if self.name == "Level1":
-            from code.levels.level1.cutscenes1 import run_scene
-            run_scene(self.window)  # ✅ Exibe a cena uma única vez
+            if self.audio:
+                self.audio.play_music("cutscene1")
+            run_scene(self.window)
+
+
 
         # ✅ Inicia o Level correspondente (ex: Level1_0)
         result = self.logic.run(player_score)
 
         # Transição de Level1 → cutscene2 → Level1_2
         if self.name == "Level1" and result:
-            from code.levels.level1.cutscenes1 import run_scene
             run_scene(self.window, "scenes2", 3)
 
             # Cria o próximo Level e executa

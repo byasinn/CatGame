@@ -37,28 +37,24 @@ class Game:
                 game_type = menu.select_mode()
                 if game_type == "BACK":
                     continue
-                is_arcade = game_type == "ARCADE"
 
-                if game_type == "CAMPANHA":
+                if game_type.lower() == "campaign":
+                    is_arcade = False
                     mode = menu.select_campaign_mode()
-                    if mode == "BACK":
-                        continue
-                    menu_return = "NEW GAME 1P" if mode == "SOLO" else "NEW GAME 2P - COOPERATIVE"
-                else:
+                elif game_type.lower() == "arcade":
+                    is_arcade = True
                     mode = menu.select_arcade_mode()
-                    if mode == "BACK":
-                        continue
-                    menu_return = "NEW GAME 1P" if mode == "SOLO" else "NEW GAME 2P - COMPETITIVE"
+                else:
+                    continue
 
                 player_score = [0, 0]
 
-                if is_arcade:
-                    self.fade(fade_in=True)
-                    # 🔧 Você pode criar depois: LevelArcade, LevelRush, etc.
-                    level = Level(self.window, 'Level1', menu_return, player_score, is_arcade=True, audio=self.audio)
-                    level_return = level.run(player_score)
-                    self.fade(fade_in=False)
+                self.fade(fade_in=True)
+                level = Level(self.window, 'Level1', mode, player_score, is_arcade=is_arcade, audio=self.audio)
+                level_return = level.run(player_score)
+                self.fade(fade_in=False)
 
+                if not level_return:
                     GameOver(self.window).show()
                     continue
 

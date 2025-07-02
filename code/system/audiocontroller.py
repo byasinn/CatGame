@@ -14,6 +14,7 @@ class AudioController:
         self.music_tracks = {
             "intro": "intro.mp3",
             "menu": "Menu.mp3",
+            "cutscene1": "scene1.mp3",
             "level1": "Level1.mp3",
             "level2": "Level2.mp3",
             "level3": "Level3.mp3",

@@ -1,3 +1,4 @@
+import random
 import sys
 import math
 import pygame
@@ -11,8 +12,16 @@ from code.settings.lang import t
 # 🔷 SCENES (chamadas pelo level.py)
 # ===============================
 def run_scene(window):
+    import random
+    import pygame
+    import sys
+
     clock = pygame.time.Clock()
     font = AssetManager.get_font("VT323-Regular", 22)
+
+    # 🔊 Som único com volume variável
+    type_sound = AssetManager.get_sound("Type1.mp3")
+    next_sound = AssetManager.get_sound("DialogueAdvance.mp3")
 
     current = 0
     fade_speed = 8
@@ -30,15 +39,20 @@ def run_scene(window):
             img.set_alpha(0 if effect == "fadein" else 255)
             rect = img.get_rect()
             if side == "left":
-                rect.bottomleft = (- 90, window.get_height() + 60)
+                rect.bottomleft = (-90, window.get_height() + 60)
             else:
                 rect.bottomright = (window.get_width() + 50, window.get_height() + 60)
             character_surfs.append((img, rect, effect))
 
         text = data.get("text", "")
-        lines = wrap_text(text, font, window.get_width() * 0.8)
+        text_chars = list(text)
+        typed_text = ""
+        char_index = 0
+        typing_delay = 2  # frames entre letras
+        typing_timer = 0
+        text_done = False
+
         fade_alpha = 0
-        show_text = False
         skip = False
 
         while not skip:
@@ -46,7 +60,8 @@ def run_scene(window):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and show_text:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and text_done:
+                    next_sound.play()
                     skip = True
 
             window.fill((0, 0, 0))
@@ -65,10 +80,21 @@ def run_scene(window):
                 window.blit(surf, rect)
 
             if fade_alpha >= max_alpha or not char_data:
-                show_text = True
-                for i, line in enumerate(lines):
-                    rect = line.get_rect(center=(window.get_width() // 2, window.get_height() - 120 + i * 25))
-                    window.blit(line, rect)
+                if not text_done and typing_timer == 0 and char_index < len(text_chars):
+                    typed_text += text_chars[char_index]
+                    char_index += 1
+                    typing_timer = typing_delay
+                    type_sound.set_volume(random.uniform(0.10, 0.20))
+                    type_sound.play()
+                elif char_index >= len(text_chars):
+                    text_done = True
+
+                if typing_timer > 0:
+                    typing_timer -= 1
+
+                rendered_text = font.render(typed_text, True, (255, 255, 255))
+                rect = rendered_text.get_rect(center=(window.get_width() // 2, window.get_height() - 100))
+                window.blit(rendered_text, rect)
 
             pygame.display.flip()
             clock.tick(60)
