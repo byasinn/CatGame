@@ -17,11 +17,8 @@ class Game:
         self.audio = AudioController()
 
     def run(self):
-        self.audio.play_music("menu")
-
-        show_intro_text(self.window)
-        show_second_intro_screen(self.window)
         show_intro_screen(self.window, self.audio)
+        show_second_intro_screen(self.window)
 
         # O controle é delegado ao Menu
         menu = Menu(self.window, self.audio)

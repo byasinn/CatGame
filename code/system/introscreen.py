@@ -19,7 +19,7 @@ def handle_skip_and_quit(window):
 
 def show_intro_text(window):
     font = AssetManager.get_font("VT323-Regular.ttf", 26)
-    text = "Miguel Castro - RU 4728107"
+    text = "be patient"
     text_surf = font.render(text, True, (255, 255, 255))
     text_rect = text_surf.get_rect(center=(window.get_width() // 2, window.get_height() // 2))
     draw_grain_overlay(window)
