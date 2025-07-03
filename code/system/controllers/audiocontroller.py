@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 
 class AudioController:
     def __init__(self):
@@ -21,6 +21,8 @@ class AudioController:
             "arcade": "LevelArcade.mp3",
             "gameover": "GameOver.mp3",
             "score": "Score.mp3",
+            "intro2": "intro2.mp3",
+
         }
 
         self.sound_effects = {

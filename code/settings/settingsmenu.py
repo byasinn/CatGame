@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings import display, audio, gameplay, language, controls
 from code.settings.lang import t

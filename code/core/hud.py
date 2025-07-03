@@ -2,7 +2,7 @@ import math
 import pygame
 from pygame import Surface
 from code.system.config import COLOR_WHITE, COLOR_PINK, COLOR_YELLOW
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 
 class HUDRenderer:
     def __init__(self, window: Surface):

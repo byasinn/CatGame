@@ -2,26 +2,26 @@
 # -*- coding: utf-8 -*-
 import math
 import random
-
 import pygame
 from code.system.config import ENTITY_SPEED
 from code.system.entity import Entity
-
 
 class Background(Entity):
     def __init__(self, name: str, position: tuple):
         self.bg_name = name
         base_name = name.lower().split(".")[0]
+
+        # Só aplica rescale customizado se NÃO for fundo de fase ou overlay
         self.apply_custom_rescale = not (
-                base_name.startswith("level")
-                or base_name.startswith("light")
-                or base_name.startswith("foreground")
+            base_name.startswith("level")
+            or base_name.startswith("light")
+            or base_name.startswith("foreground")
         )
 
         super().__init__(name, position)
-
         self.original_surf = self.surf.copy()
 
+        # Redimensiona para se ajustar à janela, com margem extra (110%)
         if self.apply_custom_rescale:
             self.rescale_to_window()
 
@@ -29,9 +29,9 @@ class Background(Entity):
         win = pygame.display.get_surface()
         if win:
             w, h = win.get_size()
-
             extra_w = int(w * 0.1)
             extra_h = int(h * 0.1)
+
             self.surf = pygame.transform.scale(
                 self.original_surf,
                 (w + extra_w, h + extra_h)
@@ -40,14 +40,17 @@ class Background(Entity):
             self.rect.topleft = (-extra_w // 2, -extra_h // 2)
 
     def move(self):
-        self.rect.x -= ENTITY_SPEED[self.name]
+        self.rect.x -= ENTITY_SPEED.get(self.name, 0)
         if self.rect.right <= 0:
             self.rect.x += self.rect.width * 2
+
 
 class BackgroundFloat(Background):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
         self.base_x, self.base_y = self.rect.topleft
+
+        # Configuração de flutuação lofi cute
         self.offset = random.randint(5, 20)
         self.speed = random.uniform(0.0005, 0.002)
         self.direction = random.choice([-1, 1])

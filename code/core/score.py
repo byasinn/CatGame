@@ -1,86 +1,59 @@
 import sys
 from datetime import datetime
 import pygame
-from pygame import Surface, Rect, K_ESCAPE
+from pygame import Surface, Rect
 from pygame.font import Font
-from code.system.assetmanager import AssetManager
-from code.system.audiocontroller import AudioController
-from code.system.config import COLOR_PINK, SCORE_POS, MENU_OPTION, COLOR_WHITE
+
+from code.system.keys import MENU_KEYS
+from code.system.managers.assetmanager import AssetManager
+from code.system.controllers.audiocontroller import AudioController
+from code.system.config import COLOR_PINK, COLOR_WHITE
 from code.system.dbproxy import DBProxy
 
+def get_formatted_date():
+    current_datetime = datetime.now()
+    return current_datetime.strftime("%H:%M %d/%m/%y")
 
 class Score:
-
     def __init__(self, window: Surface):
         self.window = window
         self.surf = AssetManager.get_image("ScoreBg.png")
-        self.rect = self.surf.get_rect(left=0, top=0)
-        pass
-
-    def save(self, game_mode: str, player_score: list[int]):
-        AudioController().play_music("score")
-        pygame.mixer_music.play(-1)
-        db_proxy = DBProxy('DBScore')
-        name = ''
-
-        while True:
-            self.window.blit(source=self.surf, dest=self.rect)
-            self.score_text(48, "GATINHOS WIN!", COLOR_PINK, SCORE_POS["Title"])
-
-            if game_mode == MENU_OPTION[0]:
-                score = player_score[0]
-                text = "Player 1 enter your name"
-            elif game_mode == MENU_OPTION[1]:
-                score = (player_score[0] + player_score[1]) / 2
-                text = "enter team name"
-            elif game_mode == MENU_OPTION[2]:
-                if player_score[0] > player_score[1]:
-                    score = player_score[0]
-                    text = "Player 1 enter your name"
-                else:
-                    score = player_score[1]
-                    text = "Player 2 enter your name"
-            else:
-                # Fallback seguro
-                score = player_score[0]
-                text = "enter your name"
-
-            self.score_text(48, text, COLOR_PINK, SCORE_POS["EnterName"])
+        self.rect = self.surf.get_rect(topleft=(0, 0))
 
     def show(self):
-        AudioController().play_music("score")
-        pygame.mixer_music.play(-1)
-        self.window.blit(source=self.surf, dest=self.rect)
-        self.score_text(48, "TOP 10 SCORE", COLOR_PINK, SCORE_POS["Title"])
-        self.score_text(20, "NAME     SCORE          DATE", COLOR_WHITE, SCORE_POS["Label"])
+        audio = AudioController()
+        audio.play_music("score")
+
         db_proxy = DBProxy('DBScore')
         list_score = db_proxy.retrieve_top10()
         db_proxy.close()
 
-        for player_score in list_score:
-            id_, name, score, date = player_score
-            self.score_text(20, f"{name}    {score :05d}   {date}", COLOR_WHITE,
-                                                    SCORE_POS[list_score.index(player_score)])
+        font_title = AssetManager.get_font("VT323-Regular.ttf", 48)
+        font_label = AssetManager.get_font("VT323-Regular.ttf", 20)
+
         while True:
+            self.window.blit(self.surf, self.rect)
+
+            # Centralizar textos
+            self.draw_text("TOP 10 SCORE", font_title, COLOR_PINK, self.window.get_width() // 2, 60, center=True)
+            self.draw_text("NAME     SCORE       DATE", font_label, COLOR_WHITE, self.window.get_width() // 2, 120, center=True)
+
+            for i, (id_, name, score, date) in enumerate(list_score):
+                text = f"{name:<8} {int(score):05d}   {date}"
+                self.draw_text(text, font_label, COLOR_WHITE, self.window.get_width() // 2, 160 + i * 28, center=True)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        return
+                if event.type == pygame.KEYDOWN and event.key in MENU_KEYS["back"]:
+                    return
+
             pygame.display.flip()
 
-
-    def score_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
-        text_font: Font = AssetManager.get_font("VT323-Regular.ttf", text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
-        self.window.blit(source=text_surf, dest=text_rect)
-
-def get_formatted_date():
-    current_datetime = datetime.now()
-    current_time = current_datetime.strftime("%H: %M")
-    current_date = current_datetime.strftime("%d/%m/%y")
-    return f"{current_time} {current_date}"
-
+    def draw_text(self, text: str, font: Font, color: tuple, x: int, y: int, center=False):
+        text_surf: Surface = font.render(text, True, color).convert_alpha()
+        text_rect: Rect = text_surf.get_rect(center=(x, y) if center else (0, 0))
+        if not center:
+            text_rect.topleft = (x, y)
+        self.window.blit(text_surf, text_rect)

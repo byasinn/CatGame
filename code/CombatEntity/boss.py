@@ -2,7 +2,7 @@ import math
 import pygame
 import random
 
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.config import ENTITY_SHOT_DELAY, ENTITY_SPEED
 from code.shots.enemyshot import EnemyShot
 from code.CombatEntity.combatentity import CombatEntity

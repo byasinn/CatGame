@@ -2,10 +2,9 @@ import random
 import sys
 import math
 import pygame
-from code.DrawableEntity.MovingEntity.background import BackgroundFloat, Background
+from code.DrawableEntity.MovingEntity.background import BackgroundFloat
 from code.levels.level1.SceneCinematicSystem import SCENE1_DATA, SCENE2_DATA, SCENE3_DATA
-from code.system.assetmanager import AssetManager
-from code.settings.lang import t
+from code.system.managers.assetmanager import AssetManager
 
 # 🔷 SCENES (chamadas pelo level.py)
 SCENE_DATASETS = {

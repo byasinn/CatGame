@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
-import pygame.image
 
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.config import ENTITY_HEALTH, ENTITY_DAMAGE, ENTITY_SCORE
 from pygame.transform import scale
 

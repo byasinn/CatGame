@@ -5,14 +5,14 @@ import pygame
 from pygame import Surface
 
 from code.settings.settingsmanager import SettingsManager
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.config import MENU_OPTION
-from code.system.entitymanager import EntityManager
+from code.system.managers.entitymanager import EntityManager
 from code.system.entity import Entity
 from code.factory.entityFactory import EntityFactory
 from code.core.hud import HUDRenderer
-from code.system.timercontroller import TimerController
-from code.system.eventcontroller import EventController
+from code.system.controllers.timercontroller import TimerController
+from code.system.controllers.eventcontroller import EventController
 from code.settings.lang import t
 
 

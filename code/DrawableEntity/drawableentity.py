@@ -1,6 +1,4 @@
-import pygame
-
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.entity import Entity
 
 class DrawableEntity(Entity):

@@ -1,9 +1,3 @@
-import pygame
-import random
-
-from code.system.assetmanager import AssetManager
-
-
 class Particle:
     def __init__(self, position):
         self.pos = list(position)
@@ -147,7 +141,7 @@ def draw_grain_overlay(surface):
     global grain_frames, grain_index, grain_loaded, grain_frame_timer
 
     if not grain_loaded:
-        from code.system.assetmanager import AssetManager
+        from code.system.managers.assetmanager import AssetManager
         grain_frames = [AssetManager.get_image(f"grain_{i}.png").convert_alpha() for i in range(4)]
         grain_loaded = True
 

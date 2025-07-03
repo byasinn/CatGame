@@ -5,8 +5,8 @@ import math
 import pygame
 from pygame import Surface
 
-from code.system.assetmanager import AssetManager
-from code.system.audiocontroller import AudioController
+from code.system.managers.assetmanager import AssetManager
+from code.system.controllers.audiocontroller import AudioController
 from code.system.config import WIN_WIDTH, WIN_HEIGHT
 from code.factory.entityFactory import EntityFactory
 
@@ -47,31 +47,29 @@ class GameOver:
 
     def _draw_background(self):
         for ent in self.bg_layers:
-            ent.move()  # <--- ESSENCIAL: move os BGs animados
+            ent.move()
             self.window.blit(ent.surf, ent.rect)
 
     def _draw_overlay(self):
         ticks = pygame.time.get_ticks()
         t = ticks * 0.005
 
-        # Animações independentes
         offset_leon = math.sin(t * 0.9) * 1.5
         offset_mora = math.cos(t * 1.1) * 1.8
         angle_leon = 2.5 * math.sin(t * 0.7)
         angle_mora = 2.5 * math.cos(t * 0.6)
 
-        # Leon
         leon_rotated = pygame.transform.rotate(self.leon_dead, angle_leon)
-        self.window.blit(leon_rotated, (0, offset_leon))
+        rect_leon = leon_rotated.get_rect(center=(WIN_WIDTH // 2 - 100, WIN_HEIGHT // 2 + offset_leon))
+        self.window.blit(leon_rotated, rect_leon)
 
-        # Mora
         mora_rotated = pygame.transform.rotate(self.mora_dead, angle_mora)
-        self.window.blit(mora_rotated, (0, offset_mora))
+        rect_mora = mora_rotated.get_rect(center=(WIN_WIDTH // 2 + 100, WIN_HEIGHT // 2 + offset_mora))
+        self.window.blit(mora_rotated, rect_mora)
 
-        # Texto Game Over pulsando e flutuando
         scale = 1 + 0.01 * math.sin(t * 0.8)
         offset_text_y = math.sin(t * 0.4) * 2
         text_scaled = pygame.transform.rotozoom(self.text, 0, scale)
-        rect = text_scaled.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2 + offset_text_y))
-        self.window.blit(text_scaled, rect)
+        rect_text = text_scaled.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2 + offset_text_y))
+        self.window.blit(text_scaled, rect_text)
 

@@ -1,7 +1,7 @@
 import random
 import pygame
 from code.CombatEntity.enemy import Enemy
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.collisionmap import CollisionMap
 from code.shots.enemyshot import EnemyShot
 from code.system.entity import Entity

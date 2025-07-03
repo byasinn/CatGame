@@ -1,4 +1,4 @@
-from code.system.assetmanager import AssetManager
+from code.system.managers import AssetManager
 from code.settings.settingsmanager import SettingsManager
 
 def setup_visual_effects(entity_manager):

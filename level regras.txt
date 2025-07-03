@@ -1,0 +1,57 @@
+### 📚 Como funciona o sistema de **Levels** no CatGame
+
+#### 🔁 Estrutura principal
+
+* A pasta `levels` contém os arquivos de lógica para **cada mundo**, organizados em subpastas como:
+
+  * `level1/`, `level2/`, `level3/`
+  * `arcade/` (com lógica própria)
+
+* O roteamento principal é feito no arquivo `levels/level.py`, com a classe `Level`.
+
+---
+
+### 🧱 Classe `Level`
+
+Level(window, name: str, game_mode: str, player_score: list[int], is_arcade=False, audio=None)
+
+
+| Parâmetro      | Significado                                    |
+| -------------- | ---------------------------------------------- |
+| `window`       | Janela atual (superfície Pygame)               |
+| `name`         | Nome da fase: "Level1", "Level1\_2", etc.      |
+| `game_mode`    | Ex: "solo", "cooperative", "competitive"       |
+| `player_score` | Lista com pontuação dos jogadores              |
+| `is_arcade`    | Ativa o modo arcade (ignora algumas cutscenes) |
+| `audio`        | Controlador de áudio do jogo                   |
+
+---
+
+### 📌 Funcionamento
+
+1. O nome passado (ex: `"Level1"`) é mapeado via `PHASE_MAP`:
+
+
+   PHASE_MAP = {
+       "Level1": Level1_0,
+       "Level1_2": Level1_2,
+       "Level2": Level2,
+       "Level3": Level3,
+   }
+
+
+2. O level correspondente é instanciado:
+
+   self.logic = LevelClass(window, game_mode, player_score, audio)
+
+
+3. Se for arcade, força o uso direto de `Level1_2`, sem depender de `PHASE_MAP`.
+
+4. A função `run()` chama a cutscene inicial (se for "Level1"), executa o level e, se aplicável, faz a transição automática para o próximo:
+
+   if self.name == "Level1" and result:
+       run_scene(...)  # cutscene 2
+       next_level = Level(..., "Level1_2", ...)
+       return next_level.run(...)
+
+

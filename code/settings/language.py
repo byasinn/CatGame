@@ -1,6 +1,6 @@
 import pygame
 
-from code.system.assetmanager import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings.settingsmanager import SettingsManager
 

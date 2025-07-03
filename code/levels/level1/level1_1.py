@@ -1,17 +1,13 @@
 import sys
 import pygame
-import math
 from pygame import Surface
 from code.settings.settingsmanager import SettingsManager
-from code.system.assetmanager import AssetManager
-from code.system.config import MENU_OPTION
-from code.system.entitymanager import EntityManager
+from code.system.managers.assetmanager import AssetManager
 from code.system.entity import Entity
 from code.factory.entityFactory import EntityFactory
 from code.core.hud import HUDRenderer
-from code.system.eventcontroller import EventController
-from code.settings.lang import t
-from code.system.entitymanager import EntityManager
+from code.system.controllers.eventcontroller import EventController
+from code.system.managers.entitymanager import EntityManager
 
 # Importa os novos módulos separados
 from code.levels.level1.tutorialmanager import TutorialManager
@@ -134,6 +130,9 @@ class Level1_0:
                 # ⏭️ Transição para o próximo nível (level1_2)
                 if elapsed_ms >= self.max_duration:
                     return True
+
+            if not self.entity_manager.is_player_alive():
+                return False
 
             pygame.display.flip()
 

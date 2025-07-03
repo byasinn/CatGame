@@ -1,0 +1,159 @@
+📐 Regras de Arquitetura Visual – CatGame
+1. Proporcionalidade e Tamanho da Janela
+Use window.get_size() ou pygame.display.get_surface().get_size() sempre no momento da renderização.
+
+Nunca use valores fixos como (640, 360) para posicionar ou escalar.
+
+Evite salvar tamanho da janela em variáveis globais.
+
+2. Redimensionamento de Imagens
+Use pygame.transform.scale() para fundos e overlays conforme o tamanho da janela.
+
+Sprites (ex: personagens e tiros) não precisam de scale, mas devem ter posicionamento proporcional.
+
+Imagens com margens extras podem usar escala de 110% (w * 1.1).
+
+3. Criação de Objetos Gráficos
+Sempre crie objetos após aplicar resolução, usando apply_resolution().
+
+4. Backgrounds
+Devem ser redimensionados usando lógica personalizada como rescale_to_window().
+
+5. Evite posições fixas
+Nunca use coordenadas fixas em elementos como texto de menu.
+
+Exemplo correto:
+center=(window.get_width() // 2, int(window.get_height() * 0.1))
+🎧 Regras de Áudio e Asset Management
+🎼 Áudio com AudioController
+Use play_music(nome) para músicas e play_sound(nome) para efeitos.
+
+Evite tocar músicas repetidas.
+
+Use stop_music() ao trocar de contexto.
+
+Volume controlado por set_music_volume() e set_sfx_volume().
+
+🗂️ AssetManager (centraliza tudo)
+Imagens: AssetManager.get_image("NomeImagem.png")
+
+Fontes: AssetManager.get_font("VT323-Regular", 22)
+
+Sons: AssetManager.get_sound("Player1Shot")
+
+❗ Nunca use diretamente:
+pygame.image.load
+pygame.font.Font
+pygame.mixer.Sound
+
+🌐 Internacionalização (i18n) – lang.py
+Uso
+Para textos traduzíveis: t("new_game")
+
+Idiomas disponíveis: pt, en
+
+Textos organizados em LANG_DICT
+
+Cutscenes
+Falas simples → listas em lang.py
+
+Cutscenes complexas → SceneCinematicSystem.py
+
+⚙️ Configurações – settingsmanager.py
+Uso de Configurações
+Acesso sempre via SettingsManager.get() / set()
+
+Salvas automaticamente em settings.json
+
+load() deve ser chamado no início do jogo
+
+Padrões:
+Chave	Tipo	Valor
+resolution_index	int	2 (960×540)
+fullscreen	bool	False
+music_volume	float	0.6
+sfx_volume	float	0.8
+language	str	"pt"
+visual_effects	bool	True
+gore	bool	True
+
+🎮 Mapeamento de Teclas – keys.py
+Teclas organizadas por contexto:
+
+PLAYER1_KEYS, PLAYER2_KEYS
+
+MENU_KEYS, CUTSCENE_KEYS
+
+DEV_KEYS para testes
+
+🧩 Lógica do Jogo – Entidades, Menu, Colisões e Tiros
+1. Entidades
+Todas herdam de Entity com:
+
+self.surf (imagem)
+
+self.rect (posição e colisão)
+
+self.health, self.speed, self.damage, self.score
+
+Métodos: move(), update(), take_damage()
+
+Tipos:
+
+Player – controlado pelo jogador, com tiro e colisão
+
+Enemy – IA simples
+
+Shot – projétil
+
+Background, BackgroundFloat – elementos visuais (sem colisão)
+
+2. Fluxo do Jogo
+Game → Menu → GameManager → Level → (Scene opcional) → Jogo → GameOver/Menu
+game.py → inicializa sistema, resolução e áudio
+menu.py → cuida da navegação
+GameManager → instancia o Level com base na escolha
+Level → controla lógica de update/render e entidades
+
+3. Sistema de Colisão
+Baseado em pygame.Rect.colliderect()
+
+Checado no loop do Level usando grupos:
+
+player_shots, enemies, enemy_shots
+
+Exemplos:
+
+Player colide com inimigo → leva dano
+
+Tiro colide com inimigo → dano + destruição
+
+4. Sistema de Tiro
+Players e inimigos usam:
+
+Delay (ENTITY_SHOT_DELAY)
+
+Som (AudioController)
+
+Criação de Shot com dano baseado em ENTITY_DAMAGE
+
+Exemplo:
+if current_time - self.last_shot >= self.shot_delay:
+    shot = PlayerShot(self.rect.center)
+    self.shots.add(shot)
+    self.last_shot = current_time
+O projétil se move automaticamente com base em direção e velocidade.
+
+📌 Outras Regras Importantes
+Troca de resolução: todos elementos dependentes de window.get_size() devem ser recalculados
+
+Evite variáveis globais para resolução
+
+Nomenclatura de arquivos: padronizada com PascalCase ou Snake_Case
+
+Ex: Level1Bg0, MenuBg1, Enemy1Shot
+
+Cutscenes complexas: devem ser organizadas como listas de dicionários nos arquivos específicos por level
+
+Chamadas iniciais obrigatórias:
+SettingsManager.load()
