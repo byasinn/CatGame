@@ -3,15 +3,8 @@ import sys
 import math
 import pygame
 from code.DrawableEntity.MovingEntity.background import BackgroundFloat
-from code.levels.level1.SceneCinematicSystem import SCENE1_DATA, SCENE2_DATA, SCENE3_DATA
+from code.levels.level1.SceneCinematicSystem import get_scene_data
 from code.system.managers.assetmanager import AssetManager
-
-# 🔷 SCENES (chamadas pelo level.py)
-SCENE_DATASETS = {
-    "scenes1": SCENE1_DATA,
-    "scenes2": SCENE2_DATA,
-    "scenes3": SCENE3_DATA,
-}
 
 def run_scene(window, scene_key="scenes1", count=None):
     clock = pygame.time.Clock()
@@ -20,7 +13,7 @@ def run_scene(window, scene_key="scenes1", count=None):
     type_sound = AssetManager.get_sound("Type1.mp3")
     next_sound = AssetManager.get_sound("DialogueAdvance.mp3")
 
-    scene_data = SCENE_DATASETS.get(scene_key)
+    scene_data = get_scene_data(scene_key)
     if not scene_data:
         print(f"[Cena '{scene_key}' não encontrada]")
         return

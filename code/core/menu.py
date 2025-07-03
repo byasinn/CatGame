@@ -32,18 +32,16 @@ class Menu:
         while True:
             selected = self.run()
 
-            if selected == "NEW GAME":
+            if selected == "new_game":
                 mode_type = self.select_mode()
                 if mode_type == "BACK":
                     continue
-
                 if mode_type.lower() == "campaign":
                     mode = self.select_campaign_mode()
                     if mode != "BACK":
                         result = self.manager.start_campaign(mode)
                         if not result:
                             GameOver(self.window).show()
-
                 elif mode_type.lower() == "arcade":
                     mode = self.select_arcade_mode()
                     if mode != "BACK":
@@ -51,20 +49,17 @@ class Menu:
                         if not result:
                             GameOver(self.window).show()
 
-
-            elif selected == "LOAD GAME":
+            elif selected == "load_game":
                 from code.core.loadgame import LoadGame
                 result = LoadGame.run_load_game(self.window, self.audio)
 
-
-
-            elif selected == "SCORE":
+            elif selected == "score":
                 Score(self.window).show()
 
-            elif selected == "SETTINGS":
+            elif selected == "settings":
                 SettingsMenu(self.window, self.audio).run()
 
-            elif selected == "EXIT":
+            elif selected == "exit":
                 pygame.quit()
                 quit()
 
@@ -83,14 +78,14 @@ class Menu:
             self.menu_text(50, t("title_main1"), COLOR_PINK, (width // 2, int(height * 0.08)), is_title=True)
             self.menu_text(50, t("title_main2"), COLOR_PINK, (width // 2, int(height * 0.15)), is_title=True)
 
-            options = ["NEW GAME", "LOAD GAME", "SCORE", "SETTINGS", "EXIT"]
+            options = ["new_game", "load_game", "score", "settings", "exit"]
             option_start_y = int(height * 0.35)
             option_spacing = int(height * 0.07)
 
             for i in range(len(options)):
                 color = COLOR_YELLOW if i == menu_option else COLOR_WHITE
                 y_pos = option_start_y + i * option_spacing
-                self.menu_text(20, t(options[i].lower()), color, (width // 2, y_pos))
+                self.menu_text(20, t(options[i]), color, (width // 2, y_pos))
 
             draw_grain_overlay(self.window)
             pygame.display.flip()

@@ -1,9 +1,7 @@
 import os
 import json
 import sys
-
 import pygame
-
 from code.settings.lang import t
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.system.keys import MENU_KEYS
@@ -66,7 +64,7 @@ class LoadGame:
                 if "level" in slot:
                     label = f"Slot {i + 1}: {slot['level']} - Score: {slot['score'][0]}"
                 else:
-                    label = f"Slot {i + 1}: Vazio"
+                    label = f"Slot {i + 1}: {t('empty_slot')}"
                 color = COLOR_YELLOW if i == selected else COLOR_WHITE
                 font = AssetManager.get_font("VT323-Regular.ttf", 22)
                 rendered = font.render(label, True, color)

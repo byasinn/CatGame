@@ -82,5 +82,9 @@ class BackgroundFactory:
             for i in range(4):
                 list_bg.append(BackgroundFloat(f'MenuBg{i}', (0, 0)))
             list_bg.append(BackgroundLight("LightOverlay_Menu", (0, 0)))
+        elif bg_type == "MenuConfig":
+            for i in range(4):
+                list_bg.append(BackgroundFloat(f'MenuConfig{i}', (0, 0)))
+            list_bg.append(BackgroundLight("LightOverlay_MenuConfig", (0, 0)))
 
         return list_bg

@@ -33,12 +33,18 @@ ENTITY_STATS = {
     # 🎨 Foregrounds com velocidade fixa
     "Foreground1_2Bg0": {"speed": 3, "health": 999, "damage": 0, "score": 0},
     "Foreground1_2Bg1": {"speed": 3, "health": 999, "damage": 0, "score": 0},
+    'MenuConfig0': {"speed": 0, "health": 999, "damage": 0, "score": 0},
+    'MenuConfig1': {"speed": 4, "health": 999, "damage": 0, "score": 0},
+    'MenuConfig2': {"speed": 3, "health": 999, "damage": 0, "score": 0},
+    "MenuConfig3": {"speed": 0, "health": 999, "damage": 0, "score": 0},
 }
 
 # Overlays estáticos
 for name in [
     "GameOverLight0",
     "LightOverlay_Menu0"
+    "LightOverlay_MenuConfig"
+
 ]:
     ENTITY_STATS[name] = {"speed": 0, "health": 999, "damage": 0, "score": 0}
 

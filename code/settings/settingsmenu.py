@@ -1,10 +1,12 @@
 import pygame
 from pygame import Surface
-
+from code.factory.backgroundfactory import BackgroundFactory
 from code.system.managers.assetmanager import AssetManager
 from code.system.config import COLOR_WHITE, COLOR_YELLOW, COLOR_PINK
 from code.settings import display, audio, gameplay, language, controls
 from code.settings.lang import t
+from code.system.particle import draw_grain_overlay
+
 
 class SettingsMenu:
     def __init__(self, window: Surface, audio_controller):
@@ -13,6 +15,7 @@ class SettingsMenu:
         self.option_keys = ["screen", "audio", "language", "controls", "gameplay", "back"]
         self.options = [t(key) for key in self.option_keys]
         self.option_index = 0
+        self.bg_list = BackgroundFactory.create("MenuConfig")
 
     def run(self):
         running = True
@@ -20,8 +23,11 @@ class SettingsMenu:
             self.audio.play_music("menu")
 
         while running:
-            self.window.fill((0, 0, 0))
+            for bg in self.bg_list:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
             self.draw_text(50, "CONFIGURAÇÕES", COLOR_PINK, (self.window.get_width() // 2, 70), True)
+            draw_grain_overlay(self.window)
 
             for i, opt in enumerate(self.options):
                 color = COLOR_YELLOW if i == self.option_index else COLOR_WHITE
