@@ -1,6 +1,8 @@
 import sys
 import pygame
 from pygame import Surface
+
+from code.levels.level1.cutscenes1 import run_scene
 from code.system.managers.assetmanager import AssetManager
 from code.system.managers.entitymanager import EntityManager
 from code.factory.entityFactory import EntityFactory
@@ -56,6 +58,7 @@ class Level1_3:
     def run(self, player_score: list[int]):
         if self.audio:
             self.audio.play_music("level1_3")
+        run_scene(self.window, "scenes3")
 
         clock = pygame.time.Clock()
         self.start_time = pygame.time.get_ticks()

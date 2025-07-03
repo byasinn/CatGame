@@ -3,7 +3,6 @@ from datetime import datetime
 import pygame
 from pygame import Surface, Rect
 from pygame.font import Font
-
 from code.system.keys import MENU_KEYS
 from code.system.managers.assetmanager import AssetManager
 from code.system.controllers.audiocontroller import AudioController

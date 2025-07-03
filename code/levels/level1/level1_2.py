@@ -1,6 +1,7 @@
 import sys
 import pygame
 from pygame import Surface
+from code.levels.level1.cutscenes1 import run_scene
 from code.system.managers.assetmanager import AssetManager
 from code.system.managers.entitymanager import EntityManager
 from code.factory.entityFactory import EntityFactory
@@ -37,7 +38,7 @@ class Level1_2:
         self.entity_manager = EntityManager(self.entity_list, self.window)
         self.event_controller = EventController(self.entity_manager, EntityFactory)
         self.hud = HUDRenderer(self.window)
-        self.sunlight = AssetManager.get_image("LightOverlay_Level1.png")
+        self.sunlight = AssetManager.get_image("LightOverlay_Level1_1Bg.png")
 
         # Efeitos visuais
         effects = SettingsManager.get("visual_effects")
@@ -57,6 +58,7 @@ class Level1_2:
     def run(self, player_score: list[int]):
         if self.audio:
             self.audio.play_music("level1")
+        run_scene(self.window, "scenes2")
 
         clock = pygame.time.Clock()
         self.start_time = pygame.time.get_ticks()

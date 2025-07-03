@@ -11,7 +11,8 @@ from code.system.managers.entitymanager import EntityManager
 
 # Importa os novos módulos separados
 from code.levels.level1.tutorialmanager import TutorialManager
-from code.levels.level1.cutscenes1 import CutsceneManager
+from code.levels.level1.cutscenes1 import CutsceneManager, run_scene
+
 
 class Level1_0:
     def __init__(self, window: Surface, game_mode: str, player_score: list[int], audio=None):
@@ -38,7 +39,7 @@ class Level1_0:
         self.entity_manager = EntityManager(self.entity_list, self.window)
         self.event_controller = EventController(self.entity_manager, EntityFactory)
         self.hud = HUDRenderer(self.window)
-        self.sunlight = AssetManager.get_image("LightOverlay_Level1.png")
+        self.sunlight = AssetManager.get_image("LightOverlay_Level1_1Bg.png")
 
         self.effects_enabled = SettingsManager.get("visual_effects")
         self.entity_manager.enable_ambient_particles = self.effects_enabled
@@ -65,6 +66,7 @@ class Level1_0:
     def run(self, player_score: list[int]):
         if self.audio:
             self.audio.play_music("level1")
+        run_scene(self.window, "scenes1")
 
         clock = pygame.time.Clock()
         self.phase = "tutorial"

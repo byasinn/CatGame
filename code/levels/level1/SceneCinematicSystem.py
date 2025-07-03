@@ -1,16 +1,16 @@
 def create_scene_data_1():
     return [
-        {"background": ["Scene1Bg", "Scene1_1Bg"], "characters": [], "text": "Leon: Está um silêncio estranho por aqui...", "music": "Scene1.mp3"},
-        {"background": ["Scene1_2Bg"], "characters": [("Leon", "left", "fadein")], "text": "Leon: Será que Mora já chegou?"},
-        {"background": ["Scene1_2Bg"], "characters": [("Mora", "right", "fadein")], "text": "Mora: Estou aqui! Não se assuste!"},
-        {"background": ["Scene1_3Bg"], "characters": [("Leon", "left", "fadein")], "text": "Leon: Que bom!"},
-        {"background": ["Scene1_4Bg"], "characters": [("Mora", "right", "fadein")], "text": "Mora: Vamos lá!"}
+        {"background": ["Scene1_1Bg0", "Scene1_1Bg1"], "characters": [], "text": "Leon: Está um silêncio estranho por aqui...", "music": "Scene1.mp3"},
+        {"background": ["Scene1_1Bg2"], "characters": [("Leon", "left", "fadein")], "text": "Leon: Será que Mora já chegou?"},
+        {"background": ["Scene1_1Bg2"], "characters": [("Mora", "right", "fadein")], "text": "Mora: Estou aqui! Não se assuste!"},
+        {"background": ["Scene1_1Bg3"], "characters": [("Leon", "left", "fadein")], "text": "Leon: Que bom!"},
+        {"background": ["Scene1_1Bg4"], "characters": [("Mora", "right", "fadein")], "text": "Mora: Vamos lá!"}
     ]
 
 def create_scene_data_2():
     return [
         # Fundo fixo da floresta com 3 camadas
-        {"background": ["Scene1_2_00", "Scene1_2_01", "Scene1_2_02"], "characters": [], "text": "Leon: Finalmente, chegamos à floresta...", "music": "Scene2.mp3"},
+        {"background": ["Scene1_2Bg0", "Scene1_2Bg1", "Scene1_2Bg2"], "characters": [], "text": "Leon: Finalmente, chegamos à floresta...", "music": "Scene2.mp3"},
 
         {"characters": [("Mora", "right", "fadein")], "text": "Mora: Foi difícil, mas conseguimos..."},
         {"characters": [("Leon", "left", "fadein")], "text": "Leon: Ainda não acredito no que enfrentamos."},

@@ -6,6 +6,7 @@ import pygame
 from pygame import Rect, Surface
 from pygame.font import Font
 
+from code.core.loadgame import LoadGame
 from code.devtools import handle_dev_keys
 from code.factory.backgroundfactory import BackgroundFactory
 from code.settings.lang import t
@@ -50,6 +51,13 @@ class Menu:
                         if not result:
                             GameOver(self.window).show()
 
+
+            elif selected == "LOAD GAME":
+                from code.core.loadgame import LoadGame
+                result = LoadGame.run_load_game(self.window, self.audio)
+
+
+
             elif selected == "SCORE":
                 Score(self.window).show()
 
@@ -75,7 +83,7 @@ class Menu:
             self.menu_text(50, t("title_main1"), COLOR_PINK, (width // 2, int(height * 0.08)), is_title=True)
             self.menu_text(50, t("title_main2"), COLOR_PINK, (width // 2, int(height * 0.15)), is_title=True)
 
-            options = ["NEW GAME", "SCORE", "SETTINGS", "EXIT"]
+            options = ["NEW GAME", "LOAD GAME", "SCORE", "SETTINGS", "EXIT"]
             option_start_y = int(height * 0.35)
             option_spacing = int(height * 0.07)
 
@@ -127,6 +135,8 @@ class Menu:
             option_start_y = int(height * 0.3)
             option_spacing = int(height * 0.08)
             options_translated = [t(opt.lower()) for opt in options]
+
+            slots = LoadGame.get_all_slots()
 
             for i, label in enumerate(options_translated):
                 color = COLOR_YELLOW if i == selected else COLOR_WHITE

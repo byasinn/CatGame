@@ -1,4 +1,4 @@
-from code.system.managers import AssetManager
+from code.system.managers.assetmanager import AssetManager
 from code.settings.settingsmanager import SettingsManager
 
 def setup_visual_effects(entity_manager):
@@ -9,7 +9,7 @@ def setup_visual_effects(entity_manager):
 
 def get_level_overlay_image():
     """Carrega a imagem de luz sobreposta da fase."""
-    return AssetManager.get_image("LightOverlay_Level1.png")
+    return AssetManager.get_image("LightOverlay_Level1_1Bg.png")
 
 def load_background_entities():
     """Carrega entidades de fundo para o Level1."""

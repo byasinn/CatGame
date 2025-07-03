@@ -8,4 +8,3 @@ pygame.display.set_icon(icon)
 
 game = Game()
 game.run()
-
