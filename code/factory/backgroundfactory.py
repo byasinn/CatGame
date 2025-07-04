@@ -32,6 +32,15 @@ class BackgroundFactory:
                 ])
             list_bg.append(BackgroundLight("LightOverlay_Level1_2", (0, 0)))
 
+        elif bg_type == "Level1_3":
+            for i in range(4):
+                bg = Background(f'Level1_3Bg{i}', (0, 0))
+                list_bg.extend([
+                    bg,
+                    Background(f'Level1_3Bg{i}', (bg.rect.width, 0))
+                ])
+            list_bg.append(BackgroundLight("LightOverlay_Level1_3", (0, 0)))
+
         elif bg_type == "Foreground1_2":
             # 🔹 Bg0 → contínuo
             for i in range(2):

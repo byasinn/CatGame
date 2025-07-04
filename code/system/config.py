@@ -13,16 +13,18 @@ EVENT_TIMEOUT = pygame.USEREVENT + 2
 # 🧠 Entidades
 ENTITY_STATS = {
     # Jogadores
-    "Player1":       {"speed": 3.5, "health": 1000, "damage": 1,  "score": 0, "shot_delay": 20},
-    "Player1Shot":   {"speed": 7,   "health": 1,    "damage": 25, "score": 0},
-    "Player2":       {"speed": 3,   "health": 1000, "damage": 1,  "score": 0, "shot_delay": 20},
-    "Player2Shot":   {"speed": 6,   "health": 1,    "damage": 25, "score": 0},
+    "Player1":       {"speed": 4, "health": 1000, "damage": 1,  "score": 0, "shot_delay": 20},
+    "Player1Shot":   {"speed": 9,   "health": 1,    "damage": 25, "score": 0},
+    "Player2":       {"speed": 4,   "health": 1000, "damage": 1,  "score": 0, "shot_delay": 20},
+    "Player2Shot":   {"speed": 9,   "health": 1,    "damage": 25, "score": 0},
 
     # Inimigos
-    "Enemy1":        {"speed": 2,   "health": 50,   "damage": 1,  "score": 100, "shot_delay": 20},
+    "Enemy1":        {"speed": 4,   "health": 50,   "damage": 1,  "score": 100, "shot_delay": 20},
     "Enemy1Shot":    {"speed": 5,   "health": 1,    "damage": 20, "score": 0},
-    "Enemy2":        {"speed": 2,   "health": 60,   "damage": 1,  "score": 125, "shot_delay": 20},
+    "Enemy2":        {"speed": 3,   "health": 60,   "damage": 1,  "score": 125, "shot_delay": 20},
     "Enemy2Shot":    {"speed": 3,   "health": 1,    "damage": 20, "score": 0},
+    "Enemy3":        {"speed": 2,   "health": 60,   "damage": 1,  "score": 125, "shot_delay": 20},
+    "Enemy3Shot":    {"speed": 3,   "health": 1,    "damage": 20, "score": 0},
     "EnemyTest":     {"speed": 0,   "health": 5,    "damage": 0,  "score": 0, "shot_delay": 100},
     "EnemyTestShot": {"speed": 1,   "health": 1,    "damage": 0,  "score": 0},
 
@@ -44,6 +46,7 @@ for name in [
     "GameOverLight0",
     "LightOverlay_Menu0"
     "LightOverlay_MenuConfig"
+    "LightOverlay_Level1_3"
 
 ]:
     ENTITY_STATS[name] = {"speed": 0, "health": 999, "damage": 0, "score": 0}
@@ -52,14 +55,13 @@ for name in [
 bg_prefixes = [
 
     # Levels
-    "Level1Bg", "Level1_2Bg",
+    "Level1Bg", "Level1_2Bg", "Level1_3Bg", "BossBg",
 
     # Interface
     "MenuBg", "GameOverBg",
 
     # Scenes (corrigido)
-    "Scene1_1Bg", "Scene1_2Bg", "Scene1_3Bg", "Scene1_4Bg",
-    "Scene1_2Bg", "Scene1_3Bg"
+    "Scene1_1Bg", "Scene1_2Bg", "Scene1_3Bg", "Scene1_3_2Bg", "Scene1_4Bg",
 ]
 
 for prefix in bg_prefixes:

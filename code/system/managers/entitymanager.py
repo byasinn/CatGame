@@ -7,6 +7,7 @@ from code.CombatEntity.player import Player
 from code.CombatEntity.enemy import Enemy
 from code.DrawableEntity.MovingEntity.background import Background
 from code.system.entitymediator import EntityMediator
+from code.shots.playershot import PlayerShot
 
 class EntityManager:
     def __init__(self, entity_list: list[Entity], window: pygame.Surface):
@@ -28,7 +29,7 @@ class EntityManager:
             elif hasattr(ent, "move"):
                 ent.move()
 
-            if isinstance(ent, (Player, Enemy)) or ent.name == "Boss":
+            if hasattr(ent, "shoot"):
                 shot = ent.shoot()
                 if shot:
                     self.entity_list.append(shot)
@@ -38,6 +39,10 @@ class EntityManager:
                     ent.damage_timer -= 1
                 else:
                     ent.damage_counter = 0
+
+        for ent in self.entity_list:
+            if isinstance(ent, PlayerShot):
+                ent.move()
 
     def draw_backgrounds(self):
         # 1. Desenha todos os backgrounds normais

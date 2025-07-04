@@ -60,7 +60,7 @@ class Level1_0:
         self.last_spawn_time = 0
         self.spawn_interval = 2000  # 2 segundos
 
-        self.max_duration = 1000
+        self.max_duration = 30000
 
 
     def run(self, player_score: list[int]):

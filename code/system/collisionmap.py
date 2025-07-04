@@ -18,24 +18,24 @@ class CollisionMap:
     @staticmethod
     def handle_collision(ent1, ent2, entity_manager):
         rects_collide = (
-            ent1.rect.right >= ent2.rect.left and
-            ent1.rect.left <= ent2.rect.right and
-            ent1.rect.bottom >= ent2.rect.top and
-            ent1.rect.top <= ent2.rect.bottom
+                ent1.rect.right >= ent2.rect.left and
+                ent1.rect.left <= ent2.rect.right and
+                ent1.rect.bottom >= ent2.rect.top and
+                ent1.rect.top <= ent2.rect.bottom
         )
 
         if not rects_collide:
             return False
 
-        key = (type(ent1), type(ent2))
-        reverse = (type(ent2), type(ent1))
-
-        if key in CollisionMap.RULES:
-            return CollisionMap.RULES[key](ent1, ent2, entity_manager)
-        elif reverse in CollisionMap.RULES:
-            return CollisionMap.RULES[reverse](ent2, ent1, entity_manager)
+        # 🔄 Verifica todas as combinações de tipos e superclasses
+        for t1 in type(ent1).__mro__:
+            for t2 in type(ent2).__mro__:
+                key = (t1, t2)
+                if key in CollisionMap.RULES:
+                    return CollisionMap.RULES[key](ent1, ent2, entity_manager)
 
         return False
+
 
 @CollisionMap.register(PlayerShot, Enemy)
 def handle_player_shot_hits_enemy(shot, enemy, manager):
@@ -61,13 +61,30 @@ def handle_enemy_shot_hits_player(shot, player, manager):
     player.health -= shot.damage
     shot.health -= player.damage
     player.last_dmg = shot.name
-
     player.take_damage_flash()
     player.damage_counter += 1
     player.damage_timer = 30
-
     if player.damage_counter >= 3:
         manager.particles_impact.append(AuraBurstParticle(player.rect.center))
         player.damage_counter = 0
 
+    return True
+
+@CollisionMap.register(Enemy, Player)
+def handle_enemy_hits_player(enemy, player, manager):
+    player.health -= enemy.damage
+    player.take_damage_flash()
+    player.damage_counter += 1
+    player.damage_timer = 30
+    manager.particles_impact.append(AuraBurstParticle(player.rect.center))
+    return True
+
+
+@CollisionMap.register(Boss, Player)
+def handle_boss_hits_player(boss, player, manager):
+    player.health -= boss.damage
+    player.take_damage_flash()
+    player.damage_counter += 1
+    player.damage_timer = 30
+    manager.particles_impact.append(ImpactParticle(player.rect.center, color=(255, 200, 0)))
     return True

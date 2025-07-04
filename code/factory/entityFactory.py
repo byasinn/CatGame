@@ -8,12 +8,10 @@ class EntityFactory:
         if name in ["Player1", "Player2"]:
             return PlayerFactory.create(name)
 
-        elif name in ["Enemy1", "Enemy2", "Boss"]:
+        elif name in ["Enemy1", "Enemy2","Enemy3", "Boss"]:
             return EnemyFactory.create(name)
-
         elif name.endswith("Bg"):
             return BackgroundFactory.create(name[:-2])
-
         elif name == "EnemyTest":
             from code.CombatEntity.enemy import Enemy
             enemy = Enemy("EnemyTest", position=(300, 200), window=window)

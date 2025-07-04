@@ -52,6 +52,16 @@ class HUDRenderer:
             pygame.draw.rect(self.window, (50, 50, 50), (bar_x, bar_y, bar_w, bar_h), border_radius=3)
             pygame.draw.rect(self.window, (255, 160, 200), (bar_x, bar_y, filled, bar_h), border_radius=3)
 
+        # Barra de vida do boss
+        if boss_summoned:
+            for entity in pygame.sprite.Group().sprites():
+                if hasattr(entity, "name") and entity.name == "Boss":
+                    bar_x, bar_y, bar_w, bar_h = 10, 58, 150, 6
+                    hp = max(0, min(1, entity.health / 1000))  # vida de 0 a 1000
+                    filled = int(bar_w * hp)
+                    pygame.draw.rect(self.window, (60, 60, 60), (bar_x, bar_y, bar_w, bar_h), border_radius=3)
+                    pygame.draw.rect(self.window, (255, 100, 100), (bar_x, bar_y, filled, bar_h), border_radius=3)
+
         # Nome do level (fonte gordinha)
         self.draw_text(13, f'{level_name}', COLOR_WHITE, (180, 7), is_title=True)
 

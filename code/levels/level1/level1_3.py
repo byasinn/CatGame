@@ -1,7 +1,6 @@
 import sys
 import pygame
 from pygame import Surface
-
 from code.levels.level1.cutscenes1 import run_scene
 from code.system.managers.assetmanager import AssetManager
 from code.system.managers.entitymanager import EntityManager
@@ -10,7 +9,7 @@ from code.core.hud import HUDRenderer
 from code.system.controllers.eventcontroller import EventController
 from code.settings.settingsmanager import SettingsManager
 from code.system.entity import Entity
-
+from code.DrawableEntity.MovingEntity.background import BackgroundFloat
 
 class Level1_3:
     def __init__(self, window: Surface, game_mode: str, player_score: list[int], audio=None):
@@ -38,7 +37,7 @@ class Level1_3:
         self.entity_manager = EntityManager(self.entity_list, self.window)
         self.event_controller = EventController(self.entity_manager, EntityFactory)
         self.hud = HUDRenderer(self.window)
-        self.sunlight = AssetManager.get_image("LightOverlay_Level1.png")
+        self.sunlight = AssetManager.get_image("LightOverlay_Level1_3.png")
 
         # Efeitos visuais
         effects = SettingsManager.get("visual_effects")
@@ -49,7 +48,7 @@ class Level1_3:
             self.player2.entity_manager = self.entity_manager
 
         # Timer e spawn
-        self.max_duration = 35000  # 35 segundos
+        self.max_duration = 5000  # 35 segundos
         self.start_time = None
         self.last_spawn_time = 0
         self.spawn_interval = 1200
@@ -93,21 +92,54 @@ class Level1_3:
                 players=[self.player],
                 level_name=self.name,
                 timeout=elapsed_ms,
-                boss_summoned=False,
+                boss_summoned=hasattr(self, "boss_phase"),
                 fps=clock.get_fps(),
                 entity_count=len(self.entity_manager.get_entities())
             )
 
             # Spawn de inimigos
-            if now - self.last_spawn_time >= self.spawn_interval:
-                enemy_type = "Enemy2" if self.enemy_toggle else "Enemy3"
-                enemy = EntityFactory.get_entity(enemy_type, window=self.window)
-                self.entity_manager.add_entity(enemy)
-                self.enemy_toggle = not self.enemy_toggle
-                self.last_spawn_time = now
+            if not hasattr(self, "boss_phase"):
+                if now - self.last_spawn_time >= self.spawn_interval:
+                    enemy_type = "Enemy2" if self.enemy_toggle else "Enemy3"
+                    enemy = EntityFactory.get_entity(enemy_type, window=self.window)
+                    enemy.entity_manager = self.entity_manager  # ✅ necessário para o shoot inteligente funcionar
+                    self.entity_manager.add_entity(enemy)
 
-            if elapsed_ms >= self.max_duration:
-                return True
+                    self.enemy_toggle = not self.enemy_toggle
+                    self.last_spawn_time = now
+
+            if elapsed_ms >= self.max_duration and not hasattr(self, "boss_phase"):
+                # ⏹️ Fase terminou, entra o boss
+                self.audio.stop_music()
+                self.audio.play_music("boss_theme")
+
+                # 🔄 Troca fundos por flutuantes
+                self.entity_manager.get_entities()[:] = [
+                    e for e in self.entity_manager.get_entities()
+                    if not isinstance(e, BackgroundFloat) and not e.name.endswith("Bg")
+                ]
+                width = self.window.get_width()
+                for i in range(4):
+                    bg = BackgroundFloat(f"BossBg{i}", (i * width, 0))
+                    self.entity_manager.add_entity(bg)
+
+                # 🧠 Adiciona o boss
+                boss = EntityFactory.get_entity("Boss", window=self.window)
+                boss.entity_manager = self.entity_manager  # ✅ atribuição correta
+                self.entity_manager.add_entity(boss)
+
+                self.start_boss_time = pygame.time.get_ticks()
+                self.boss_phase = True
+
+            if hasattr(self, "boss_phase") and self.boss_phase:
+                # Atualiza boss logicamente
+                if not self.entity_manager.has_entity_named("Boss"):
+                    # Boss saiu da tela → final
+                    run_scene(self.window, "scenes4")  # Cena final
+                    from code.core.menu import Menu
+                    Menu(self.window, self.audio).run_loop()
+                    return
+
             if not self.entity_manager.is_player_alive():
                 return False
 

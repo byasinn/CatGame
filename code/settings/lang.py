@@ -94,11 +94,13 @@ LANG_DICT = {
         ],
 
         "scenes3": [
-            {"background": ["Scene1_3_1Bg"], "characters": [], "text": "Mora: Estamos quase lá...", "music": "Scene3.mp3"},
-            {"background": ["Scene1_3_2Bg"], "characters": [("Mora", "left", "fadein"), ("Leon", "right", "fadein")], "text": "Leon: Você tem certeza que é seguro?"},
-            {"background": ["Scene1_3_3Bg"], "characters": [("Mora", "left", "fadein")], "text": "Mora: Não. Mas não temos escolha."},
-            {"background": ["Scene1_3_4Bg"], "characters": [("Mora", "left", "fadein"), ("Luri", "right", "fadein")], "text": "Luri: Finalmente vocês chegaram..."},
-            {"background": ["Scene1_3_4Bg"], "characters": [("Leon", "left", "fadein")], "text": "Leon: Luri!? Você tá bem?"}
+            {"background": ["Scene1_3Bg0", "Scene1_3Bg1", "Scene1_3Bg2", "Scene1_3Bg3"], "characters": [], "text": "Mora: Estamos quase lá...", "music": "Scene3.mp3"},
+            {"background": ["Scene1_3_2Bg0"], "characters": [("Mora", "left", "fadein"), ("Luri", "right", "fadein")], "text": "Luri: Finalmente vocês chegaram..."},
+        ],
+
+        "scenes4": [
+            {"background": ["Scene1_3Bg0", "Scene1_3Bg1", "Scene1_3Bg2", "Scene1_3Bg3"], "characters": [], "text": "Mora: Estamos quase lá...", "music": "Scene3.mp3"},
+            {"background": ["Scene1_3_2Bg0"], "characters": [("Mora", "left", "fadein"), ("Luri", "right", "fadein")], "text": "Luri: Finalmente vocês chegaram..."},
         ],
     },
 
@@ -200,7 +202,7 @@ LANG_DICT = {
         ],
 
         "scenes3": [
-            {"background": ["Scene1_3_1Bg"], "characters": [], "text": "Mora: We're almost there...", "music": "Scene3.mp3"},
+            {"background": ["Scene1_3Bg0", "Scene1_3Bg1", "Scene1_3Bg2", "Scene1_3Bg3"], "characters": [], "text": "Mora: We're almost there...", "music": "Scene3.mp3"},
             {"background": ["Scene1_3_2Bg"], "characters": [("Mora", "left", "fadein"), ("Leon", "right", "fadein")], "text": "Leon: Are you sure it's safe?"},
             {"background": ["Scene1_3_3Bg"], "characters": [("Mora", "left", "fadein")], "text": "Mora: No. But we have no choice."},
             {"background": ["Scene1_3_4Bg"], "characters": [("Mora", "left", "fadein"), ("Luri", "right", "fadein")], "text": "Luri: You finally made it..."},
