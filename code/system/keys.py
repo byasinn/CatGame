@@ -27,7 +27,7 @@ PLAYER2_KEYS = {
     "down": pygame.K_DOWN,
     "left": pygame.K_LEFT,
     "right": pygame.K_RIGHT,
-    "shoot": pygame.K_LCTRL,
+    "shoot": pygame.K_RCTRL,
     "power1": pygame.K_0,
     "power2": pygame.K_9,
     "power3": pygame.K_8,

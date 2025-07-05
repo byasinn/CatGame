@@ -3,6 +3,7 @@
 from pygame import Surface
 
 from code.core.finishlevel import FinishLevel
+from code.levels.arcade.arcade import Arcade
 from code.levels.level1.cutscenes1 import run_scene
 from code.levels.level1.level1_1 import Level1_0
 from code.levels.level1.level1_2 import Level1_2
@@ -36,7 +37,7 @@ class Level:
         self.is_arcade = is_arcade
 
         if self.is_arcade:
-            self.logic = Level1_2(window, game_mode, player_score, audio)
+            self.logic = Arcade(window, game_mode, player_score, audio)
         else:
             LevelClass = PHASE_MAP.get(name)
             if not LevelClass:

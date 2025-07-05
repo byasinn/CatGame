@@ -20,10 +20,10 @@ ENTITY_STATS = {
 
     # Inimigos
     "Enemy1":        {"speed": 4,   "health": 50,   "damage": 1,  "score": 100, "shot_delay": 20},
-    "Enemy1Shot":    {"speed": 5,   "health": 1,    "damage": 20, "score": 0},
-    "Enemy2":        {"speed": 3,   "health": 60,   "damage": 1,  "score": 125, "shot_delay": 20},
+    "Enemy1Shot":    {"speed": 4,   "health": 1,    "damage": 20, "score": 0},
+    "Enemy2":        {"speed": 3,   "health": 60,   "damage": 1,  "score": 150, "shot_delay": 20},
     "Enemy2Shot":    {"speed": 3,   "health": 1,    "damage": 20, "score": 0},
-    "Enemy3":        {"speed": 2,   "health": 60,   "damage": 1,  "score": 125, "shot_delay": 20},
+    "Enemy3":        {"speed": 5,   "health": 80,   "damage": 1,  "score": 170, "shot_delay": 20},
     "Enemy3Shot":    {"speed": 3,   "health": 1,    "damage": 20, "score": 0},
     "EnemyTest":     {"speed": 0,   "health": 5,    "damage": 0,  "score": 0, "shot_delay": 100},
     "EnemyTestShot": {"speed": 1,   "health": 1,    "damage": 0,  "score": 0},

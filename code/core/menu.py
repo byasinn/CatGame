@@ -114,7 +114,7 @@ class Menu:
         return self.run_options(["solo", "cooperative"], "campaign")
 
     def select_arcade_mode(self):
-        return self.run_options(["solo", "competitive"], "arcade")
+        return self.run_options(["solo"], "arcade")
 
     def run_options(self, options, title):
         selected = 0

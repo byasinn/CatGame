@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 import math
 import random
-
 import pygame
-
+from code.system.keys import PLAYER1_KEYS, PLAYER2_KEYS
 from code.system.managers.assetmanager import AssetManager
 from code.system.config import ENTITY_SPEED, PLAYER_KEY_UP, PLAYER_KEY_DOWN, PLAYER_KEY_LEFT, \
     PLAYER_KEY_RIGHT, PLAYER_KEY_SHOOT, ENTITY_SHOT_DELAY
@@ -13,14 +12,24 @@ from code.CombatEntity.combatentity import CombatEntity
 from code.system.particle import AuraBurstParticle
 
 class Player(CombatEntity):
-    def __init__(self, name: str, position: tuple, window):
+    def __init__(self, name: str, position: tuple, window, direction=None):
         super().__init__(name, position)
+        self.speed = ENTITY_SPEED.get(name, 8)
+        self.direction = direction or pygame.math.Vector2(1, 0)  # padrão: direita
         self.window = window
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.damage_flash_timer = 0
         self.damage_counter = 0
         self.damage_timer = 0
         self.shot_fired = False
+        self.charge_start = None
+        self.max_charge_time = 2000  # milissegundos (2s máx)
+
+        self.shield_active = False
+        self.shield_energy = 100  # energia máxima
+        audio = AssetManager.get_sound("ShieldActivate.mp3")
+        self.shield_audio = audio
+        self.shield_particles: list[AuraBurstParticle] = []
 
         self.image_normal = AssetManager.get_image(f"{self.name}.png")
         self.image_blink = AssetManager.get_image(f"{self.name}_blink.png")
@@ -54,49 +63,93 @@ class Player(CombatEntity):
 
     def move(self):
         self.dir = 0  # parado por padrão
-
         pressed_key = pygame.key.get_pressed()
-        if pressed_key[PLAYER_KEY_UP[self.name]] and self.rect.top > 0:
+
+        # Usa o mapeamento de teclas correto conforme o nome do player
+        keymap = PLAYER1_KEYS if self.name == "Player1" else PLAYER2_KEYS
+
+        if pressed_key[keymap["up"]] and self.rect.top > 0:
             self.rect.centery -= ENTITY_SPEED[self.name]
-        if pressed_key[PLAYER_KEY_DOWN[self.name]] and self.rect.bottom < self.window.get_height():
+        if pressed_key[keymap["down"]] and self.rect.bottom < self.window.get_height():
             self.rect.centery += ENTITY_SPEED[self.name]
-        if pressed_key[PLAYER_KEY_LEFT[self.name]] and self.rect.left > 0:
+        if pressed_key[keymap["left"]] and self.rect.left > 0:
             self.rect.centerx -= ENTITY_SPEED[self.name]
             self.dir = -1
-        if pressed_key[PLAYER_KEY_RIGHT[self.name]] and self.rect.right < self.window.get_width():
+        if pressed_key[keymap["right"]] and self.rect.right < self.window.get_width():
             self.rect.centerx += ENTITY_SPEED[self.name]
             self.dir = 1
 
     def shoot(self):
+        mouse_buttons = pygame.mouse.get_pressed()
+        current_time = pygame.time.get_ticks()
         pressed_key = pygame.key.get_pressed()
 
-        # Diminui o delay de tiro
+        # Player2 usa tecla própria (ex: CTRL esquerdo)
+        if self.name == "Player2":
+            if pressed_key[PLAYER2_KEYS["shoot"]]:
+                if self.shot_delay > 0:
+                    self.shot_delay -= 1
+                if self.shot_delay <= 0:
+                    self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+                    try:
+                        sound = AssetManager.get_sound(f"{self.name}Shot.mp3")
+                        sound.set_volume(0.4)
+                        sound.play()
+                    except Exception as e:
+                        print(f"[Erro ao tocar som de {self.name}] {e}")
+
+                    direction = pygame.math.Vector2(1, 0)  # tiro reto
+                    return PlayerShot(
+                        name=f'{self.name}Shot',
+                        position=self.rect.center,
+                        direction=direction,
+                        speed_multiplier=1.0,
+                        damage_multiplier=1.0,
+                        gravity_effect=False
+                    )
+            return None
+
+        # Player1 com mouse
         if self.shot_delay > 0:
             self.shot_delay -= 1
 
-        # Verifica se pode atirar
-        if pressed_key[PLAYER_KEY_SHOOT[self.name]] and self.shot_delay == 0:
+        if mouse_buttons[0]:
+            if self.charge_start is None:
+                self.charge_start = current_time
+            return None
+
+        if self.charge_start is not None and self.shot_delay <= 0:
+            charge_duration = min(current_time - self.charge_start, self.max_charge_time)
+            charge_ratio = charge_duration / self.max_charge_time
+            self.charge_start = None
+
+            self.shot_delay = ENTITY_SHOT_DELAY[self.name]
             self.blink_force = True
             self.image = self.image_blink
             self.blink_timer = 0
-
             self.shot_fired = True
-            self.shot_delay = ENTITY_SHOT_DELAY[self.name]
 
             try:
                 sound = AssetManager.get_sound(f"{self.name}Shot.mp3")
-                sound.set_volume(0.5)
+                sound.set_volume(0.5 + 0.5 * charge_ratio)
                 sound.play()
             except Exception as e:
                 print(f"[Erro ao tocar som de tiro] {e}")
 
-            offset_y = -20 if self.name == "Player2" else 10
-            spawn_x = self.rect.centerx + 30
-            spawn_y = self.rect.centery + offset_y
+            mx, my = pygame.mouse.get_pos()
+            dx = mx - self.rect.centerx
+            dy = my - self.rect.centery
+            direction = pygame.math.Vector2(dx, dy).normalize() if dx or dy else pygame.math.Vector2(1, 0)
 
-            return PlayerShot(name=f'{self.name}Shot', position=(spawn_x, spawn_y))
+            return PlayerShot(
+                name=f'{self.name}Shot',
+                position=self.rect.center,
+                direction=direction,
+                speed_multiplier=1 + 2 * charge_ratio,
+                damage_multiplier=1 + 2 * charge_ratio,
+                gravity_effect=True
+            )
 
-        self.shot_fired = False
         return None
 
     def take_damage_flash(self):
@@ -154,11 +207,15 @@ class Player(CombatEntity):
         rect = rotated.get_rect(center=(self.rect.centerx, self.rect.centery + offset))
         surface.blit(rotated, rect)
 
+        for p in self.shield_particles:
+            p.draw(surface)
+
     def update(self):
         self.move()
         self.update_tail_animation()
         self.update_blink_animation()
         self.update_paw_animation()
+        self.handle_shield()
 
         shot = self.shoot()
         if shot:
@@ -214,3 +271,27 @@ class Player(CombatEntity):
         if self.tail_frame_timer >= 10:  # Troca a cada 6 frames (~10x por segundo)
             self.tail_frame_index = (self.tail_frame_index + 1) % len(self.tail_frames)
             self.tail_frame_timer = 0
+
+    def handle_shield(self):
+        mouse_buttons = pygame.mouse.get_pressed()
+        if mouse_buttons[2]:  # Botão direito
+            if self.shield_energy > 0:
+                if not self.shield_active:
+                    self.shield_active = True
+                    if self.shield_audio:
+                        self.shield_audio.play()
+                self.shield_energy = max(0, self.shield_energy - 0.5)
+
+                # Efeito de partículas da bolha
+                self.shield_particles.append(AuraBurstParticle(self.rect.center, color=(150, 200, 255)))
+            else:
+                self.shield_active = False
+        else:
+            self.shield_active = False
+            if self.shield_energy < 100:
+                self.shield_energy = min(100, self.shield_energy + 0.25)
+
+        # Atualiza partículas da bolha
+        for p in self.shield_particles:
+            p.update()
+        self.shield_particles = [p for p in self.shield_particles if p.lifetime > 0]

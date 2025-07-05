@@ -88,3 +88,20 @@ def handle_boss_hits_player(boss, player, manager):
     player.damage_timer = 30
     manager.particles_impact.append(ImpactParticle(player.rect.center, color=(255, 200, 0)))
     return True
+
+@CollisionMap.register(EnemyShot, Player)
+def handle_enemy_shot_hits_player(shot, player, manager):
+    if hasattr(player, 'shield_active') and player.shield_active:
+        return False  # bloqueado pelo escudo
+
+    player.health -= shot.damage
+    shot.health -= player.damage
+    player.last_dmg = shot.name
+    player.take_damage_flash()
+    player.damage_counter += 1
+    player.damage_timer = 30
+    if player.damage_counter >= 3:
+        manager.particles_impact.append(AuraBurstParticle(player.rect.center))
+        player.damage_counter = 0
+
+    return True

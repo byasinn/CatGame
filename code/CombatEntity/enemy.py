@@ -58,12 +58,12 @@ class Enemy(CombatEntity):
                 AssetManager.get_image("Enemy3_2.png"),
                 AssetManager.get_image("Enemy3_3.png")
             ]
-            self.health = 110
-            self.damage = 12
-            self.speed = 2.0
+            self.health = 150
+            self.damage = random.randint(18, 35)
+            self.speed = 3.5
             self.score = 150
             self.last_shot_time = pygame.time.get_ticks()
-            self.shot_delay = random.randint(1000, 1800)
+            self.shot_delay = random.randint(30, 60)
             self.behavior_timer = 0
             self.state = "moving"
 
@@ -133,14 +133,32 @@ class Enemy(CombatEntity):
             return None
 
         # Enemy1 ou Enemy2 ou outros padrões
+        # Enemy1 ou Enemy2 ou outros padrões
         self.shot_delay -= 1
         if self.shot_delay <= 0:
             if self.name == "Enemy1":
                 self.shot_delay = random.randint(30, 40)
+                direction = pygame.Vector2(-1, 0)  # tiro reto
+
             elif self.name == "Enemy2":
                 self.shot_delay = random.randint(45, 60)
+
+                players = self.entity_manager.get_players() if hasattr(self, "entity_manager") else []
+                if players:
+                    target = min(players, key=lambda p: abs(p.rect.centery - self.rect.centery))
+                    dx = target.rect.centerx - self.rect.centerx
+                    dy = target.rect.centery - self.rect.centery
+
+                    # Imprecisão leve (ângulo aleatório)
+                    angle_offset = random.uniform(-0.8, 0.8)
+                    direction = pygame.Vector2(dx, dy).rotate_rad(angle_offset)
+                    direction = direction.normalize()
+                else:
+                    direction = pygame.Vector2(-1, 0)  # fallback
+
             else:
-                self.shot_delay = random.randint(35, 80)  # padrão para outros, como EnemyTest
+                self.shot_delay = random.randint(35, 80)
+                direction = pygame.Vector2(-1, 0)
 
             try:
                 sound = AssetManager.get_sound(f"{self.name}Shot.mp3")
@@ -149,7 +167,8 @@ class Enemy(CombatEntity):
             except Exception as e:
                 print(f"[Erro ao tocar som de {self.name}] {e}")
 
-            return EnemyShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
+            return EnemyShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery),
+                             direction=direction)
 
         return None
 

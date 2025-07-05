@@ -1,3 +1,4 @@
+import random
 import sys
 import pygame
 from pygame import Surface
@@ -48,7 +49,7 @@ class Level1_3:
             self.player2.entity_manager = self.entity_manager
 
         # Timer e spawn
-        self.max_duration = 5000  # 35 segundos
+        self.max_duration = 40000  # 35 segundos
         self.start_time = None
         self.last_spawn_time = 0
         self.spawn_interval = 1200
@@ -100,7 +101,7 @@ class Level1_3:
             # Spawn de inimigos
             if not hasattr(self, "boss_phase"):
                 if now - self.last_spawn_time >= self.spawn_interval:
-                    enemy_type = "Enemy2" if self.enemy_toggle else "Enemy3"
+                    enemy_type = random.choice(["Enemy1", "Enemy2", "Enemy3"])
                     enemy = EntityFactory.get_entity(enemy_type, window=self.window)
                     enemy.entity_manager = self.entity_manager  # ✅ necessário para o shoot inteligente funcionar
                     self.entity_manager.add_entity(enemy)

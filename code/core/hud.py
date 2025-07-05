@@ -65,6 +65,17 @@ class HUDRenderer:
         # Nome do level (fonte gordinha)
         self.draw_text(13, f'{level_name}', COLOR_WHITE, (180, 7), is_title=True)
 
+        # 🔰 Barra de energia do escudo
+        shield_x = x + 120
+        shield_y = y + 8
+        shield_w = 60
+        shield_h = 6
+        percent = max(0, min(1, p.shield_energy / 100))
+        filled = int(shield_w * percent)
+
+        pygame.draw.rect(self.window, (40, 40, 60), (shield_x, shield_y, shield_w, shield_h), border_radius=3)
+        pygame.draw.rect(self.window, (180, 220, 255), (shield_x, shield_y, filled, shield_h), border_radius=3)
+
     def draw_score(self, game_mode: str, player_score: list[int], tick: int):
         x_base = 350
         y_base = 5
@@ -135,3 +146,25 @@ class HUDRenderer:
         rect = msg_surface.get_rect(center=(surface.get_width() // 2, surface.get_height() // 4))
         surface.blit(msg_surface, rect)
 
+    def draw_arcade_score(self, players: list):
+        # Novo HUD para modo Arcade com ícones e scores lado a lado (posicionado no canto superior direito)
+        w, _ = self.window.get_size()
+        hud_width = 240
+        hud_bg = pygame.Surface((hud_width, 50), pygame.SRCALPHA)
+        hud_bg.fill((0, 0, 0, 90))
+        self.window.blit(hud_bg, (w - hud_width - 10, 10))
+
+        for i, p in enumerate(players):
+            name = p.name
+            score = p.score
+            icon = self.cat_heads.get(name)
+
+            x = w - hud_width + 10 + i * 110
+            y = 15
+
+            # Desenha ícone
+            icon = pygame.transform.scale(icon, (28, 28))
+            self.window.blit(icon, (x, y))
+
+            # Desenha score
+            self.draw_text(22, str(score), COLOR_WHITE, (x + 34, y + 2), is_title=True)
